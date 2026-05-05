@@ -93,7 +93,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
 
   return (
     <section
-      className="relative w-full h-[75vh] overflow-hidden bg-black"
+      className="relative w-full h-[65vh] overflow-hidden bg-black"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -120,7 +120,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
 
               <motion.h1
                 variants={textItemVariants}
-                className="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight whitespace-pre-line mb-4"
+                className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight whitespace-pre-line mb-4"
               >
                 {currentSlide.title}
               </motion.h1>
@@ -172,7 +172,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
               <img
                 src={currentSlide.image}
                 alt={currentSlide.title}
-                className="w-full h-full object-contain scale-[1.3] translate-x-[10%] drop-shadow-[0_40px_80px_rgba(0,0,0,0.6)]"
+                className="w-full h-full object-contain scale-[1.02] translate-x-[6%] drop-shadow-[0_40px_80px_rgba(0,0,0,0.6)]"
               />
             </motion.div>
           </AnimatePresence>
@@ -202,7 +202,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
           <button
             key={slide.id}
             onClick={() => goToSlide(index)}
-            className={`h-[1px] w-[100px] rounded-full transition-all duration-300 ${index === currentIndex
+            className={`h-[1px] w-[85px] rounded-full transition-all duration-300 ${index === currentIndex
               ? "bg-[#ff6600]"
               : "bg-white/40 hover:bg-white/60"
               }`}

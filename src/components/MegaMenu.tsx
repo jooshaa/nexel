@@ -87,7 +87,7 @@ export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMen
                             key={product.id}
                             href={`/product/${product.id}`}
                             onClick={() => onMouseLeave()}
-                            className="group flex flex-col items-center p-6 bg-[#f7f7f7] rounded-3xl hover:bg-[#f0f0f0] transition-all duration-300 border border-transparent hover:border-gray-200"
+                            className="group flex flex-col items-center p-6 bg-[#f7f7f7] rounded-3xl hover:bg-[#f0f0f0] transition-all duration-300 border border-transparent hover:border-gray-200 isolate"
                           >
                             <div className="relative w-full aspect-square mb-6 flex items-center justify-center overflow-hidden">
                               {product.isNew && (
@@ -98,7 +98,7 @@ export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMen
                               <img 
                                 src={product.image} 
                                 alt={product.name}
-                                className="max-h-[85%] max-w-[85%] object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                                className="max-h-[85%] max-w-[85%] object-contain mix-blend-darken group-hover:scale-110 transition-transform duration-500"
                               />
                             </div>
                             <h4 className="text-sm font-semibold text-gray-900 text-center line-clamp-1">

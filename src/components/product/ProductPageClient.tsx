@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProductData } from "@/lib/productData";
 import { ImageGallery } from "./ImageGallery";
@@ -22,34 +23,34 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
       <ProductNav />
 
       {/* Main section */}
-      <section className="max-w-7xl mx-auto px-8 pt-28 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-14 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-20 items-start">
 
           {/* LEFT — Product Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col gap-6"
+            className="order-2 lg:order-1 flex flex-col gap-5 sm:gap-6"
           >
             {/* Title */}
             <div>
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-gray-900 leading-[0.95] tracking-tight max-w-[12ch]">
                 {product.name}
               </h1>
-              <p className="mt-2 text-sm uppercase tracking-widest text-gray-400 font-medium">
+              <p className="mt-2 text-[11px] sm:text-sm uppercase tracking-[0.28em] text-gray-400 font-medium">
                 {product.subtitle}
               </p>
             </div>
 
             {/* Price */}
-            <p className="text-2xl font-semibold text-gray-900">
+            <p className="text-xl sm:text-2xl font-semibold text-gray-900">
               ${product.price}
             </p>
 
             {/* Color selector */}
             <div className="flex flex-col gap-2">
-              <p className="text-xs uppercase tracking-widest text-gray-400 font-medium">
+              <p className="text-[11px] sm:text-xs uppercase tracking-[0.24em] text-gray-400 font-medium">
                 Color — <span className="text-gray-600">{selectedColor}</span>
               </p>
               <ColorSelector
@@ -60,7 +61,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-500 leading-relaxed max-w-sm">
+            <p className="text-sm sm:text-[15px] text-gray-500 leading-relaxed max-w-md">
               {product.description}
             </p>
 
@@ -81,7 +82,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:sticky lg:top-24"
+            className="order-1 lg:order-2 lg:sticky lg:top-24"
           >
             <ImageGallery images={product.images} name={product.name} />
           </motion.div>
@@ -89,20 +90,20 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
       </section>
 
       {/* Related Products */}
-      <section className="max-w-7xl mx-auto px-8 py-16 border-t border-gray-100">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-2xl font-bold text-gray-900 tracking-tight">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 border-t border-gray-100">
+        <div className="flex items-center justify-between gap-4 mb-8 sm:mb-10">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight">
             Looking for more?
           </h2>
-          <a
+          <Link
             href="/"
-            className="text-xs font-semibold uppercase tracking-widest text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1"
+            className="shrink-0 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1"
           >
             More →
-          </a>
+          </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {product.relatedProducts.map((related) => (
             <ProductCard key={related.id} product={related} />
           ))}

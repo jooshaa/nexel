@@ -41,5 +41,15 @@ const PRODUCTS: Product[] = [
 ];
 
 export function ProductGridSection() {
-  return <ProductGrid products={PRODUCTS} />;
+  return (
+    <ProductGrid
+      products={PRODUCTS}
+      tabs={[
+        "Xiaomi Fan Festival",
+        "Smart on the Go",
+        "Smart Tech Appliances",
+        "Lifestyle Companions",
+      ]}
+    />
+  );
 }

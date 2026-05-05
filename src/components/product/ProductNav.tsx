@@ -5,7 +5,7 @@ const NAV_LINKS = ["Shop", "About", "Blog", "Account", "Bag"];
 export function ProductNav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-8 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
@@ -15,7 +15,7 @@ export function ProductNav() {
         </Link>
 
         {/* Nav links */}
-        <ul className="flex items-center gap-8">
+        <ul className="hidden sm:flex items-center gap-5 md:gap-8">
           {NAV_LINKS.map((link) => (
             <li key={link}>
               <Link
@@ -28,6 +28,13 @@ export function ProductNav() {
             </li>
           ))}
         </ul>
+
+        <Link
+          href="/"
+          className="sm:hidden text-xs font-semibold uppercase tracking-[0.24em] text-gray-500"
+        >
+          Shop
+        </Link>
       </div>
     </nav>
   );

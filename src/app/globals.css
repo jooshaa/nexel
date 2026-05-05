@@ -49,7 +49,8 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background-base: #f7f7f7;
+  --background: var(--background-base);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -129,5 +130,23 @@
   }
   html {
     @apply font-sans;
+    scrollbar-color: rgb(208, 208, 208) rgb(255, 255, 255);
   }
+}
+
+/* WebKit scrollbars (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(255, 255, 255);
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(208, 208, 208);
+  border-radius: 999px;
+  border: 2px solid rgb(255, 255, 255);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(190, 190, 190);
 }

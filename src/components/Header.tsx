@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import Image from "next/image";
 import { Search, Menu as MenuIcon, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MegaMenu } from "./MegaMenu";
@@ -64,7 +65,14 @@ export function Header() {
             className="flex items-center gap-2 relative z-50 shrink-0"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            <span className="text-2xl font-bold tracking-[3px] text-gray-900">NEXEL</span>
+            <Image
+              src="/logo.svg"
+              alt="Nexel"
+              width={120}
+              height={40}
+              priority
+              className="mix-blend-multiply"
+            />
           </Link>
 
           {/* Desktop Navigation - Centered */}
