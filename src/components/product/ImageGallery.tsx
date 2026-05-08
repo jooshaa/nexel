@@ -7,9 +7,10 @@ import Image from "next/image";
 interface ImageGalleryProps {
   images: string[];
   name: string;
+  productId?: string;
 }
 
-export function ImageGallery({ images, name }: ImageGalleryProps) {
+export function ImageGallery({ images, name, productId }: ImageGalleryProps) {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
 
@@ -43,14 +44,17 @@ export function ImageGallery({ images, name }: ImageGalleryProps) {
             animate="center"
             exit="exit"
             transition={{ duration: 0.35, ease: "easeInOut" }}
-            className="absolute inset-0 flex items-center justify-center p-4 sm:p-8 transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
           >
             <Image
               src={images[current]}
               alt={`${name} view ${current + 1}`}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain p-4 sm:p-8"
+              className={`object-contain p-4 sm:p-8 ${(productId === "i1" || productId === "i3") && current === 0
+                  ? "mix-blend-multiply opacity-[0.98] contrast-[0.99] brightness-[1.00]"
+                  : ""
+                }`}
               priority={current === 0}
             />
           </motion.div>
@@ -65,11 +69,10 @@ export function ImageGallery({ images, name }: ImageGalleryProps) {
               key={i}
               onClick={() => goTo(i)}
               aria-label={`View image ${i + 1}`}
-              className={`relative shrink-0 overflow-hidden rounded-full border transition-all duration-300 ${
-                i === current
-                  ? "w-14 sm:w-16 h-14 sm:h-16 border-gray-900"
-                  : "w-12 sm:w-16 h-12 sm:h-16 border-gray-200 hover:border-gray-400"
-              }`}
+              className={`relative shrink-0 overflow-hidden rounded-full border transition-all duration-300 ${i === current
+                ? "w-14 sm:w-16 h-14 sm:h-16 border-gray-900"
+                : "w-12 sm:w-16 h-12 sm:h-16 border-gray-200 hover:border-gray-400"
+                }`}
             >
               <Image
                 src={image}

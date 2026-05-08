@@ -6,22 +6,31 @@ import { motion, AnimatePresence } from "framer-motion";
 interface AccordionProps {
   title: string;
   items: string[];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function Accordion({ title, items }: AccordionProps) {
-  const [open, setOpen] = useState(false);
+export function Accordion({ title, items, open, onOpenChange }: AccordionProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = open ?? internalOpen;
+
+  const toggle = () => {
+    const next = !isOpen;
+    if (open === undefined) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
 
   return (
     <div className="border-t border-gray-200">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={toggle}
         className="w-full flex items-center justify-between py-4 text-left group"
       >
         <span className="text-sm font-medium text-gray-900 tracking-wide">
           {title}
         </span>
         <motion.span
-          animate={{ rotate: open ? 45 : 0 }}
+          animate={{ rotate: isOpen ? 45 : 0 }}
           transition={{ duration: 0.2 }}
           className="text-gray-400 text-xl leading-none select-none group-hover:text-gray-900 transition-colors"
         >
@@ -30,7 +39,7 @@ export function Accordion({ title, items }: AccordionProps) {
       </button>
 
       <AnimatePresence initial={false}>
-        {open && (
+        {isOpen && (
           <motion.div
             key="content"
             initial={{ height: 0, opacity: 0 }}

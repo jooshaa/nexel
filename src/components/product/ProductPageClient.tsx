@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProductData } from "@/lib/productData";
@@ -17,10 +17,48 @@ interface ProductPageClientProps {
 
 export function ProductPageClient({ product }: ProductPageClientProps) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name ?? "");
+  const [openSection, setOpenSection] = useState<"details" | "payments" | "shipping" | null>(null);
+
+  useEffect(() => {
+    const applyHash = () => {
+      const hash = window.location.hash?.replace("#", "")?.toLowerCase();
+      if (hash === "details" || hash === "payments" || hash === "shipping") {
+        const section = hash as "details" | "payments" | "shipping";
+        setOpenSection(section);
+        requestAnimationFrame(() => {
+          document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    };
+
+    applyHash();
+
+    const onHashChange = () => applyHash();
+
+    const onNavClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      const anchor = target?.closest?.("a[href^='#']") as HTMLAnchorElement | null;
+      const href = anchor?.getAttribute?.("href") ?? "";
+      const section = href.replace("#", "").toLowerCase();
+      if (section === "details" || section === "payments" || section === "shipping") {
+        setOpenSection(section as "details" | "payments" | "shipping");
+        requestAnimationFrame(() => {
+          document.getElementById(section)?.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      }
+    };
+
+    window.addEventListener("hashchange", onHashChange);
+    document.addEventListener("click", onNavClick);
+
+    return () => {
+      window.removeEventListener("hashchange", onHashChange);
+      document.removeEventListener("click", onNavClick);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
-      <ProductNav />
 
       {/* Main section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-14 sm:pb-20">
@@ -70,9 +108,33 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
 
             {/* Accordions */}
             <div className="mt-2">
-              <Accordion title="Details" items={product.details} />
-              <Accordion title="Payment Options" items={product.paymentOptions} />
-              <Accordion title="Shipping" items={product.shipping} />
+              <div id="details">
+                <Accordion
+                  title="Details"
+                  items={product.details}
+                  open={openSection === "details"}
+                  onOpenChange={(isOpen) => setOpenSection(isOpen ? "details" : null)}
+                />
+              </div>
+
+              <div id="payments">
+                <Accordion
+                  title="Payments"
+                  items={product.paymentOptions}
+                  open={openSection === "payments"}
+                  onOpenChange={(isOpen) => setOpenSection(isOpen ? "payments" : null)}
+                />
+              </div>
+
+              <div id="shipping">
+                <Accordion
+                  title="Shipping"
+                  items={product.shipping}
+                  open={openSection === "shipping"}
+                  onOpenChange={(isOpen) => setOpenSection(isOpen ? "shipping" : null)}
+                />
+              </div>
+
               <div className="border-t border-gray-200" />
             </div>
           </motion.div>
@@ -84,7 +146,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="order-1 lg:order-2 lg:sticky lg:top-24"
           >
-            <ImageGallery images={product.images} name={product.name} />
+            <ImageGallery images={product.images} name={product.name} productId={product.id} />
           </motion.div>
         </div>
       </section>

@@ -1,34 +1,29 @@
 "use client";
 
 import { HeroSlider, Slide } from "./HeroSlider";
+import { HeroSlide as CMSHeroSlide } from "@/lib/cms/types";
+import { getMediaURL } from "@/lib/cms/api";
 
-const SLIDES: Slide[] = [
-  {
-    id: 1,
-    subtitle: "Powerful steam. Perfect results.",
-    title: "Nexel Volta V7\nSteam Iron",
-    description: "Glides effortlessly. Removes wrinkles\nwith precision and power.",
-    image: "/slide1.png",
-    link: "/product/i1",
-  },
-  {
-    id: 2,
-    subtitle: "Engineered for fast drying. Designed for care.",
-    title: "Nexel Aura Pro\nHair Dryer",
-    description: "Powerful digital motor. Intelligent heat control.\nFor shine, smoothness, and healthy hair.",
-    image: "/slide2.png",
-    link: "/product/d1",
-  },
-  {
-    id: 3,
-    subtitle: "Brewed to perfection",
-    title: "Nexel Barista\nCoffee Experience",
-    description: "Italian design. Perfected taste.\nElevate every moment.",
-    image: "/slide3.png",
-    link: "/product/c2",
-  },
-];
+interface HeroProps {
+  slides: CMSHeroSlide[];
+}
 
-export function Hero() {
-  return <HeroSlider slides={SLIDES} autoplayInterval={5000} />;
+export function Hero({ slides }: HeroProps) {
+  // Map CMS HeroSlides to the UI's Slide format with robust null safety
+  const mappedSlides: Slide[] = (slides || [])
+    .filter(slide => slide && slide.image?.url) // Only show slides with images
+    .map((slide) => ({
+      id: slide.id,
+      title: slide.title || "Nexel Premium",
+      subtitle: slide.subtitle || "",
+      description: slide.description || "", 
+      image: getMediaURL(slide.image.url),
+      link: slide.buttonLink || "/",
+    }));
+
+
+  // Fallback if no slides are provided or active
+  if (mappedSlides.length === 0) return null;
+
+  return <HeroSlider slides={mappedSlides} autoplayInterval={5000} />;
 }
