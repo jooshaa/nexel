@@ -50,6 +50,7 @@ export function ImageGallery({ images, name, productId }: ImageGalleryProps) {
               src={images[current]}
               alt={`${name} view ${current + 1}`}
               fill
+              unoptimized={true}
               sizes="(max-width: 768px) 100vw, 50vw"
               className={`object-contain p-4 sm:p-8 ${(productId === "i1" || productId === "i3") && current === 0
                   ? "mix-blend-multiply opacity-[0.98] contrast-[0.99] brightness-[1.00]"
@@ -78,6 +79,7 @@ export function ImageGallery({ images, name, productId }: ImageGalleryProps) {
                 src={image}
                 alt=""
                 fill
+                unoptimized={true}
                 sizes="64px"
                 className="object-cover"
               />

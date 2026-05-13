@@ -15,10 +15,13 @@ import type {
 
 export const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:1337';
 
-export function getMediaURL(url?: string | null) {
+export function getMediaURL(url: string | undefined | null): string {
   if (!url) return "";
   if (url.startsWith("http")) return url;
-  return `${CMS_URL}${url}`;
+  
+  // Ensure we don't have double slashes if url starts with /
+  const cleanUrl = url.startsWith("/") ? url : `/${url}`;
+  return `${CMS_URL}${cleanUrl}`;
 }
 
 const CMS_TOKEN = process.env.CMS_API_TOKEN; 
@@ -51,22 +54,38 @@ async function cmsGet<T>(
     }
   };
 
-  appendParams(url.searchParams, params);
-
-
-  const res = await fetch(url.toString(), {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(CMS_TOKEN ? { Authorization: `Bearer ${CMS_TOKEN}` } : {}),
-    },
-    next: { revalidate }, 
-  });
-
-  if (!res.ok) {
-    throw new Error(`CMS fetch failed: ${res.status} ${res.statusText} — ${path}`);
+  // Add query params if provided
+  if (params && Object.keys(params).length > 0) {
+    appendParams(url.searchParams, params);
   }
 
-  return res.json();
+  try {
+    const res = await fetch(url.toString(), {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(CMS_TOKEN ? { Authorization: `Bearer ${CMS_TOKEN}` } : {}),
+      },
+      next: { revalidate }, 
+    });
+
+    if (!res.ok) {
+      // Avoid throwing on every failure to prevent infinite re-render loops in some dev environments
+      console.warn(`CMS Fetch Warning: ${res.status} ${res.statusText} — ${path}`);
+      return { data: [] } as any; 
+    }
+
+    return await res.json();
+  } catch (error: any) {
+    // Handle network errors (like ECONNREFUSED) gracefully in development
+    if (error.cause?.code === 'ECONNREFUSED' || error.message?.includes('fetch failed')) {
+      console.error(`\x1b[31m[CMS Error]\x1b[0m Failed to connect to Strapi at ${CMS_URL}. Is the CMS running?`);
+      // Return empty data structure to prevent component crashes
+      return { data: [] } as any;
+    }
+    
+    console.error(`CMS fetch error for ${path}:`, error);
+    throw error;
+  }
 }
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
@@ -77,7 +96,11 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
     {
       'filters[active][$eq]': 'true',
       'sort': 'order:asc',
-      'populate': '*',
+      'populate': {
+        image: true,
+        phone: true,
+        bgColor: true,
+      },
     },
     300 
   );
@@ -107,7 +130,15 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     '/products',
     {
       'filters[slug][$eq]': slug,
-      'populate': '*',
+      'populate': [
+        'images',
+        'specifications',
+        'colors',
+        'colors.image',
+        'category',
+        'category.products',
+        'category.products.images'
+      ],
     },
     60
   );
@@ -173,6 +204,20 @@ export async function getAllProductSlugs(): Promise<string[]> {
   return data.data.map((p) => p.slug);
 }
 
+export async function searchProducts(query: string): Promise<Product[]> {
+  const data = await cmsGet<StrapiResponse<Product[]>>(
+    '/products',
+    {
+      'filters[$or][0][title][$containsi]': query,
+      'filters[$or][1][shortDescription][$containsi]': query,
+      'populate': ['images', 'category'],
+      'pagination[pageSize]': '6',
+    },
+    60
+  );
+  return data.data;
+}
+
 // ── Categories ────────────────────────────────────────────────────────────────
 
 export async function getCategories(): Promise<Category[]> {
@@ -230,9 +275,19 @@ export async function getNavbarSections(): Promise<NavbarSection[]> {
     {
       'filters[active][$eq]': 'true',
       'sort': 'order:asc',
-      'populate': '*',
+      'populate': {
+        category: {
+          populate: '*'
+        },
+        featuredProducts: {
+          populate: {
+            images: true
+          }
+        },
+        promoImage: true
+      },
     },
-    600 
+    60 
   );
   return data.data;
 }
@@ -240,12 +295,13 @@ export async function getNavbarSections(): Promise<NavbarSection[]> {
 // ── Homepage data bundle ──────────────────────────────────────────────────────
 
 export async function getHomepageData() {
-  const [heroSlides, featuredSections, categories, heroProducts] = await Promise.all([
+  const [heroSlides, featuredSections, heroProducts, featuredProducts] = await Promise.all([
     getHeroSlides(),
     getFeaturedSections(),
-    getCategories(),
     getHeroProducts(),
+    getFeaturedProducts(),
   ]);
 
-  return { heroSlides, featuredSections, categories, heroProducts };
+  return { heroSlides, featuredSections, heroProducts, featuredProducts };
 }
+

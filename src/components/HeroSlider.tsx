@@ -4,15 +4,18 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export interface Slide {
   id: number;
   title: string;
   subtitle: string;
   description: string;
-  image: string;
-  bgColor?: string;
+  image: string;      // background image (optional)
+  phone: string;      // product PNG without background
+  bgColor: string;    // background color
   link: string;
+  buttonText?: string;
 }
 
 interface HeroSliderProps {
@@ -90,11 +93,12 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
   return (
     <section className="w-full">
       <div 
-        className="relative w-full h-[60vh] overflow-hidden"
+        className="relative w-full h-[77vh] overflow-hidden group"
+        style={{ backgroundColor: currentSlide.bgColor ?? '#111111' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={currentSlide.id}
             initial="hidden"
@@ -102,102 +106,134 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
             exit="exit"
             className="absolute inset-0 w-full h-full"
           >
-            {/* IMAGE LAYER - FULL BLEED COVER */}
+            {/* Layer 1 — Background Image */}
             <motion.div 
-              variants={imageVariants}
-              className="absolute inset-0 z-10 w-full h-full"
+              className="absolute inset-0 z-0 w-full h-full"
             >
-              <img
-                src={currentSlide.image}
-                alt={currentSlide.title}
-                className="w-full h-full object-cover object-center transition-transform duration-1000 ease-out"
-              />
+              {currentSlide.image && (
+                <Image
+                  src={currentSlide.image}
+                  alt="background"
+                  fill
+                  priority={true}
+                  unoptimized={true}
+                  sizes="100vw"
+                  className="object-cover object-center"
+                />
+              )}
             </motion.div>
 
-            {/* DARK CINEMATIC OVERLAYS - LEFT ANCHORED */}
-            <div className="absolute inset-0 z-[15] bg-gradient-to-r from-black/75 via-black/30 to-transparent pointer-events-none" />
+            {/* Layer 2 — Darkening Overlay */}
+            <div className="absolute inset-0 z-[5] bg-black/10 pointer-events-none" />
 
-            {/* CONTENT LAYER - FLOATING OVER MEDIA */}
-            <div className="absolute left-[8%] md:left-[12%] top-1/2 -translate-y-1/2 z-20 w-full max-w-[480px] text-center md:text-left px-6 md:px-0">
-              <motion.div
-                variants={textContainerVariants}
-                className="flex flex-col items-center md:items-start"
-              >
-                <motion.p
-                  variants={textItemVariants}
-                  className="text-[#ff6600] text-xs font-bold tracking-[0.3em] uppercase mb-4"
-                >
-                  {currentSlide.subtitle}
-                </motion.p>
+            {/* Layer 3 — Content Layout (Balanced Proportional Split) */}
 
-                <motion.h1
-                  variants={textItemVariants}
-                  className="text-4xl md:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-[1.05] mb-5"
-                >
-                  {currentSlide.title}
-                </motion.h1>
-
-                {currentSlide.description && (
-                  <motion.p
-                    variants={textItemVariants}
-                    className="text-white/60 text-sm md:text-base leading-relaxed mb-10 max-w-[400px]"
+            <div className="absolute inset-0 z-10 flex w-full h-full">
+              {/* Left 50% — Text Content (Moved slightly away from center) */}
+              <div className="w-1/2 h-full flex items-center justify-end pr-[10%] md:pr-[12%]">
+                <div className="max-w-[90%] md:max-w-[80%]">
+                  <motion.div
+                    variants={textContainerVariants}
+                    className="flex flex-col items-start text-left"
                   >
-                    {currentSlide.description}
-                  </motion.p>
-                )}
-
-                <motion.div variants={textItemVariants}>
-                  <Link href={currentSlide.link}>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="bg-white text-black px-8 py-3 rounded-full text-xs font-bold hover:bg-white/90 transition-all"
+                    <motion.p
+                      variants={textItemVariants}
+                      className="text-white/80 text-xs font-bold tracking-[0.3em] uppercase mb-4"
                     >
-                      Discover more
-                    </motion.button>
-                  </Link>
-                </motion.div>
-              </motion.div>
+                      {currentSlide.subtitle}
+                    </motion.p>
+
+                    <motion.h1
+                      variants={textItemVariants}
+                      className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1] mb-6"
+                    >
+                      {currentSlide.title}
+                    </motion.h1>
+
+                    {currentSlide.description && (
+                      <motion.p
+                        variants={textItemVariants}
+                        className="text-white/60 text-sm md:text-base leading-relaxed mb-10 max-w-[450px]"
+                      >
+                        {currentSlide.description}
+                      </motion.p>
+                    )}
+
+                    <motion.div variants={textItemVariants}>
+                      <Link href={currentSlide.link}>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="bg-white text-black px-10 py-3.5 rounded-full text-xs font-bold hover:bg-white/90 transition-all shadow-lg"
+                        >
+                          {currentSlide.buttonText || "Learn more"}
+                        </motion.button>
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Right 50% — Product PNG (Moved slightly away from center) */}
+              <div className="w-1/2 h-full flex items-center justify-start pl-[3%] md:pl-[4%] pr-[3%] py-[20px]">
+                <div className="relative w-full h-full">
+                  {currentSlide.phone && (
+                    <Image
+                      src={currentSlide.phone}
+                      alt={currentSlide.title}
+                      fill
+                      priority={true}
+                      unoptimized={true}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-contain"
+                    />
+                  )}
+                </div>
+              </div>
             </div>
+
+
+
+
           </motion.div>
         </AnimatePresence>
 
-        {/* COMPACT CONTROLS - CENTERED XIAOMI STYLE */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-8 z-30">
-          {/* Pagination Bars */}
-          <div className="flex items-center gap-2.5">
-            {slides.map((slide, index) => (
-              <button
-                key={slide.id}
-                onClick={() => goToSlide(index)}
-                className={`h-[2px] transition-all duration-700 ${index === currentIndex
-                  ? "w-10 bg-white"
-                  : "w-5 bg-white/25 hover:bg-white/50"
-                  }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+        {/* SIDE NAVIGATION ARROWS (Xiaomi Style) */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/20 transition-all opacity-0 group-hover:opacity-100"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="absolute right-6 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white/50 hover:text-white hover:bg-white/20 transition-all opacity-0 group-hover:opacity-100"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
 
-          {/* Navigation Arrows */}
-          <div className="flex items-center gap-4">
+        {/* LONG HORIZONTAL BULLETS (Xiaomi Style) */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
+          {slides.map((slide, index) => (
             <button
-              onClick={prevSlide}
-              className="w-10 h-10 flex items-center justify-center transition-all hover:scale-110 text-white/40 hover:text-white"
-              aria-label="Previous slide"
+              key={slide.id}
+              onClick={() => goToSlide(index)}
+              className="group py-4 px-1 flex items-center"
+              aria-label={`Go to slide ${index + 1}`}
             >
-              <ChevronLeft className="w-5 h-5" />
+              <div 
+                className={`h-[2px] transition-all duration-700 rounded-full ${index === currentIndex
+                  ? "w-20 bg-white"
+                  : "w-16 bg-white/20 group-hover:bg-white/40"
+                }`}
+              />
             </button>
-            <button
-              onClick={nextSlide}
-              className="w-10 h-10 flex items-center justify-center transition-all hover:scale-110 text-white/40 hover:text-white"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+          ))}
         </div>
       </div>
     </section>
+
   );
 }

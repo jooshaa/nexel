@@ -19,8 +19,42 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nexel | Premium Tech Products",
-  description: "Modern, high-end tech products inspired by global design",
+  title: {
+    default: "Nexel | Premium Tech Store",
+    template: "%s | Nexel"
+  },
+  description: "Experience the next level of technology with Nexel. Premium, high-end electronics designed for the modern lifestyle.",
+  keywords: ["tech", "premium electronics", "gadgets", "smart home", "audio", "nexel"],
+  authors: [{ name: "Nexel Team" }],
+  creator: "Nexel",
+  publisher: "Nexel",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://nexel-store.com",
+    siteName: "Nexel",
+    title: "Nexel | Premium Tech Store",
+    description: "Experience the next level of technology with Nexel. Premium, high-end electronics designed for the modern lifestyle.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Nexel Premium Tech",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nexel | Premium Tech Store",
+    description: "Experience the next level of technology with Nexel.",
+    images: ["/og-image.jpg"],
+    creator: "@nexel_tech",
+  },
 };
 
 export default function RootLayout({

@@ -1,37 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MENU_DATA } from "@/lib/menuData";
 import Link from "next/link";
+import Image from "next/image";
 import { Copy, LayoutGrid } from "lucide-react";
+import { NavbarSection } from "@/lib/cms/types";
+import { getMediaURL } from "@/lib/cms/api";
 
 interface MegaMenuProps {
   activeCategory: string | null;
+  navbarSections: NavbarSection[];
   onMouseEnter: () => void;
   onMouseLeave: () => void;
 }
 
-export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMenuProps) {
+export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouseLeave }: MegaMenuProps) {
   const [activeSubId, setActiveSubId] = useState<string | null>(null);
   const [prevCategory, setPrevCategory] = useState<string | null>(null);
 
-  if (activeCategory !== prevCategory) {
-    setPrevCategory(activeCategory);
-    if (activeCategory && MENU_DATA[activeCategory]) {
-      const firstSub = MENU_DATA[activeCategory].subCategories[0];
-      if (firstSub) {
-        setActiveSubId(firstSub.id);
+  useEffect(() => {
+    if (activeCategory !== prevCategory) {
+      setPrevCategory(activeCategory);
+      if (activeCategory) {
+        const section = navbarSections.find(s => s.title === activeCategory);
+        if (section && section.featuredProducts && section.featuredProducts.length > 0) {
+          setActiveSubId(section.featuredProducts[0].id.toString());
+        } else {
+          setActiveSubId(null);
+        }
       }
     }
-  }
+  }, [activeCategory, prevCategory, navbarSections]);
 
-  const categoryData = activeCategory ? MENU_DATA[activeCategory] : null;
-  const activeSubCategory = categoryData?.subCategories.find(sub => sub.id === activeSubId) || categoryData?.subCategories[0];
+  const activeSectionData = navbarSections.find(s => s.title === activeCategory);
 
   return (
     <AnimatePresence>
-      {categoryData && (
+      {activeSectionData && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
@@ -44,29 +50,29 @@ export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMen
           <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-row py-8 min-h-[400px]">
               
-              {/* Left Sidebar */}
+              {/* Left Sidebar - Simplified to just show "Featured" or category links if we had them */}
               <div className="w-1/4 pr-8 border-r border-gray-100 flex flex-col">
                 <ul className="space-y-4 mb-10">
-                  {categoryData.subCategories.map((sub) => (
-                    <li key={sub.id}>
-                      <button
-                        onMouseEnter={() => setActiveSubId(sub.id)}
-                        className={`text-base md:text-lg font-medium transition-colors w-full text-left flex items-center justify-between ${
-                          activeSubId === sub.id 
-                            ? "text-[#043927] font-bold" 
-                            : "text-gray-800 hover:text-[#043927]"
-                        }`}
+                  <li>
+                    <button
+                      className={`text-base md:text-lg font-medium transition-colors w-full text-left flex items-center justify-between text-[#043927] font-bold`}
+                    >
+                      Featured Products
+                      <span className="text-[#043927]">›</span>
+                    </button>
+                  </li>
+                  {activeSectionData.category && (
+                    <li>
+                      <Link
+                        href={`/category/${activeSectionData.category.slug}`}
+                        onClick={() => onMouseLeave()}
+                        className={`text-base md:text-lg font-medium transition-colors w-full text-left flex items-center justify-between text-gray-800 hover:text-[#043927]`}
                       >
-                        {sub.name}
-                        {activeSubId === sub.id && (
-                          <span className="text-[#043927]">›</span>
-                        )}
-                      </button>
+                        All {activeSectionData.category.name}
+                      </Link>
                     </li>
-                  ))}
+                  )}
                 </ul>
-
-
               </div>
 
               {/* Right Content */}
@@ -81,34 +87,38 @@ export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMen
                       transition={{ duration: 0.2 }}
                       className="grid grid-cols-2 lg:grid-cols-4 gap-6"
                     >
-                      {activeSubCategory?.products && activeSubCategory.products.length > 0 ? (
-                        activeSubCategory.products.map((product) => (
+                      {activeSectionData.featuredProducts && activeSectionData.featuredProducts.length > 0 ? (
+                        activeSectionData.featuredProducts.map((product) => (
                           <Link 
                             key={product.id}
-                            href={`/product/${product.id}`}
+                            href={`/product/${product.slug}`}
                             onClick={() => onMouseLeave()}
                             className="group flex flex-col items-center p-6 bg-[#f7f7f7] rounded-3xl hover:bg-[#f0f0f0] transition-all duration-300 border border-transparent hover:border-gray-200 isolate"
                           >
                             <div className="relative w-full aspect-square mb-6 flex items-center justify-center overflow-hidden">
-                              {product.isNew && (
+                              {product.badge && (
                                 <span className="absolute top-0 left-0 bg-[#043927] text-white text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded-lg z-10">
-                                  New
+                                  {product.badge}
                                 </span>
                               )}
-                              <img 
-                                src={product.image} 
-                                alt={product.name}
-                                className="max-h-[85%] max-w-[85%] object-contain mix-blend-darken group-hover:scale-110 transition-transform duration-500"
-                              />
+                              {product.images && (
+                                <Image 
+                                  src={getMediaURL(Array.isArray(product.images) ? product.images[0]?.url : (product.images as any)?.url)} 
+                                  alt={product.title}
+                                  fill
+                                  unoptimized={true}
+                                  className="object-contain group-hover:scale-110 transition-transform duration-500 p-2"
+                                />
+                              )}
                             </div>
                             <h4 className="text-sm font-semibold text-gray-900 text-center line-clamp-1">
-                              {product.name}
+                              {product.title}
                             </h4>
                           </Link>
                         ))
                       ) : (
                         <div className="col-span-full flex items-center justify-center h-48 text-gray-400">
-                          Coming soon
+                          {activeSectionData.promoTitle || "Coming soon"}
                         </div>
                       )}
                     </motion.div>
@@ -122,12 +132,12 @@ export function MegaMenu({ activeCategory, onMouseEnter, onMouseLeave }: MegaMen
                     <span>Accessories</span>
                   </button>
                   <Link 
-                    href={`/category/${activeSubId}`}
+                    href={activeSectionData.category ? `/category/${activeSectionData.category.slug}` : "#"}
                     onClick={() => onMouseLeave()}
                     className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors bg-gray-50 px-4 py-2 rounded-lg hover:bg-gray-100"
                   >
                     <LayoutGrid className="w-4 h-4" />
-                    <span>All {activeSubCategory?.name || "Series"}</span>
+                    <span>All {activeSectionData.category?.name || "Series"}</span>
                   </Link>
                 </div>
               </div>

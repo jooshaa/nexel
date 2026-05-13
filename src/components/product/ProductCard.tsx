@@ -16,6 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
           src={product.image}
           alt={product.name}
           fill
+          unoptimized={true}
           sizes="(max-width: 768px) 50vw, 25vw"
           className="object-contain p-4 sm:p-6 transition-transform duration-500 group-hover:scale-105"
         />

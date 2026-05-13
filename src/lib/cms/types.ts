@@ -109,21 +109,14 @@ export interface Category {
 
 export interface HeroSlide {
   id: number;
-  documentId: string;
   title: string;
-  subtitle: string | null;
-  description: string | null;
-  buttonText: string | null;
-  buttonLink: string | null;
-  image: StrapiImage;
-  mobileImage: StrapiImage | null;
-  active: boolean;
-  order: number;
-  textColor: 'light' | 'dark';
-  overlayOpacity: number;
-  publishedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
+  subtitle: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  bgColor: { url: string } | null;  // это фон
+  image: { url: string } | null;    // это PNG товара
+  phone: { url: string } | null;
 }
 
 export interface FeaturedSection {

@@ -17,10 +17,17 @@ export function mapCMSProductToUI(product: CMSProduct): UIProductData {
     name: product.title || 'Untitled Product',
     subtitle: product.subtitle || '',
     price: product.price || 0,
-    // Safely map images, fallback to placeholder array
-    images: (Array.isArray(product.images) && product.images.length > 0)
-      ? product.images.map(img => getMediaURL(img.url)).filter(Boolean) 
-      : ['/placeholder.png'],
+    // Safely map images, handle both single object and array of images from Strapi
+    images: (() => {
+      if (Array.isArray(product.images) && product.images.length > 0) {
+        return product.images.map(img => getMediaURL(img.url)).filter(Boolean);
+      }
+      // Handle single image object if Strapi field is set to Single Media
+      if (product.images && (product.images as any).url) {
+        return [getMediaURL((product.images as any).url)];
+      }
+      return ['/placeholder.png'];
+    })(),
 
 
     // Safely map colors
@@ -57,9 +64,15 @@ export function mapCMSProductToRelated(product: CMSProduct): UIRelatedProduct {
     id: product.slug || String(product.id),
     name: product.title || 'Related Product',
     price: product.price || 0,
-    image: (Array.isArray(product.images) && product.images[0]?.url) 
-      ? getMediaURL(product.images[0].url) 
-      : '/placeholder.png'
+    image: (() => {
+      if (Array.isArray(product.images) && product.images[0]?.url) {
+        return getMediaURL(product.images[0].url);
+      }
+      if (product.images && (product.images as any).url) {
+        return getMediaURL((product.images as any).url);
+      }
+      return '/placeholder.png';
+    })()
   };
 }
 
