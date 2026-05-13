@@ -1,4 +1,7 @@
-// This component is currently not in use as it was replaced by FeaturedProducts.tsx
-export default function ProductGrid() {
+import React from 'react';
+
+const ProductGrid: React.FC = () => {
   return null;
-}
+};
+
+export default ProductGrid;
