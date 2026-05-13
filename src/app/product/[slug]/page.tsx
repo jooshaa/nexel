@@ -43,7 +43,9 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     openGraph: {
       title: product.seoTitle || product.title,
       description: product.seoDescription || product.shortDescription || undefined,
-      images: product.images[0] ? [{ url: getMediaURL(product.images[0].url) }] : [],
+      images: (product.images && product.images.length > 0) 
+        ? [{ url: getMediaURL(product.images[0].url) }] 
+        : [],
     },
 
   };

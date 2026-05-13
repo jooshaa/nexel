@@ -19,9 +19,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: {
-    default: "Nexel | Premium Tech Store",
-    template: "%s | Nexel"
+    default: "Nexel | Premium Tech Products",
+    template: "%s | Nexel",
   },
   description: "Experience the next level of technology with Nexel. Premium, high-end electronics designed for the modern lifestyle.",
   keywords: ["tech", "premium electronics", "gadgets", "smart home", "audio", "nexel"],
