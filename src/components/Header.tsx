@@ -1,8 +1,9 @@
 import { getNavbarSections } from "@/lib/cms/api";
 import { HeaderClient } from "./HeaderClient";
+import { NavbarSection } from "@/lib/cms/types";
 
 export async function Header() {
-  let navbarSections = [];
+  let navbarSections: NavbarSection[] = [];
   try {
     navbarSections = await getNavbarSections();
     console.log("Navbar Sections fetched:", navbarSections.length);
