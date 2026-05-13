@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { MegaMenu } from "./MegaMenu";
 import { MENU_DATA } from "@/lib/menuData";
 import { AnimatePresence, motion } from "framer-motion";
-import { NavbarSection } from "@/lib/cms/types";
+import { NavbarSection, Product } from "@/lib/cms/types";
 
 interface HeaderClientProps {
   navbarSections: NavbarSection[];
@@ -52,7 +52,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<(Product & { imageUrl: string })[]>([]);
   const [isSearching, setIsSearching] = useState(false);
 
   const searchRef = useRef<HTMLDivElement>(null);

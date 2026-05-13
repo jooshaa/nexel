@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { Footer } from "@/components/Footer";
 import { getHomepageData } from "@/lib/cms/api";
+import { HeroSlide, FeaturedSection, Product } from "@/lib/cms/types";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -14,10 +15,10 @@ export const metadata: Metadata = {
 export const revalidate = 120;
 
 export default async function Home() {
-  let heroSlides = [];
-  let featuredSections = [];
-  let heroProducts = [];
-  let individualFeatured = [];
+  let heroSlides: HeroSlide[] = [];
+  let featuredSections: FeaturedSection[] = [];
+  let heroProducts: Product[] = [];
+  let individualFeatured: Product[] = [];
 
   try {
     // Fetch dynamic CMS content
