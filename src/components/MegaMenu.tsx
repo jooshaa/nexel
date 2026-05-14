@@ -106,7 +106,6 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                                   src={getMediaURL(Array.isArray(product.images) ? product.images[0]?.url : (product.images as any)?.url)} 
                                   alt={product.title}
                                   fill
-                                  unoptimized={true}
                                   className="object-contain group-hover:scale-110 transition-transform duration-500 p-2"
                                 />
                               )}

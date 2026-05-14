@@ -116,7 +116,6 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   alt="background"
                   fill
                   priority={true}
-                  unoptimized={true}
                   sizes="100vw"
                   className="object-cover object-center"
                 />
@@ -183,7 +182,6 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                       alt={currentSlide.title}
                       fill
                       priority={true}
-                      unoptimized={true}
                       sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-contain"
                     />

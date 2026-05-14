@@ -66,7 +66,6 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                     alt={featured.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    unoptimized={true}
                     className="object-contain p-8 transition-transform duration-700 group-hover:scale-105"
                     priority
                   />
@@ -105,7 +104,6 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                     alt={product.title}
                     fill
                     sizes="(max-width: 640px) 100vw, 25vw"
-                    unoptimized={true}
                     className="object-contain p-5 transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>

@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Custom Cloudinary loader: auto-resizes + converts to WebP/AVIF on the fly
+    loader: "custom",
+    loaderFile: "./src/lib/cloudinary-loader.ts",
     remotePatterns: [
       {
         protocol: "https",
@@ -23,7 +26,6 @@ const nextConfig: NextConfig = {
         pathname: '/uploads/**',
       },
     ],
-
   },
 };
 

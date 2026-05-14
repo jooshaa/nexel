@@ -230,7 +230,6 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                                         src={product.imageUrl}
                                         alt={product.title}
                                         fill
-                                        unoptimized={true}
                                         className="object-contain p-1"
                                       />
                                     )}

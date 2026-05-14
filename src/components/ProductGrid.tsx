@@ -1,7 +1,5 @@
-import React from 'react';
-
-const ProductGrid: React.FC = () => {
+// Obsolete stub — replaced by dynamic FeaturedSections from CMS
+export type Product = never;
+export function ProductGrid() {
   return null;
-};
-
-export default ProductGrid;
+}
