@@ -143,10 +143,11 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
 
           {/* Desktop Navigation - Centered */}
           {!isSearchOpen && (
-            <nav
-              className="hidden md:flex items-center space-x-6 lg:space-x-8 absolute left-1/2 -translate-x-1/2"
-              onMouseLeave={handleMouseLeave}
-            >
+            <div className="flex-1 hidden md:flex justify-center px-4 overflow-hidden">
+              <nav
+                className="flex items-center space-x-4 lg:space-x-8 overflow-x-auto no-scrollbar"
+                onMouseLeave={handleMouseLeave}
+              >
               {navbarSections.map((section) => (
                 <div
                   key={section.id}
@@ -172,6 +173,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                 </div>
               ))}
             </nav>
+          </div>
           )}
 
           {/* Search Bar - Replaces Nav when open */}
