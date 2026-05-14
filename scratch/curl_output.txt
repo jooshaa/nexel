@@ -1,0 +1,76 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Host nexel-strapi.etamin.uz:443 was resolved.
+* IPv6: (none)
+* IPv4: 188.114.97.11, 188.114.96.11
+*   Trying 188.114.97.11:443...
+* Connected to nexel-strapi.etamin.uz (188.114.97.11) port 443
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+} [327 bytes data]
+*  CAfile: /etc/ssl/cert.pem
+*  CApath: none
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* (304) (IN), TLS handshake, Server hello (2):
+{ [122 bytes data]
+* (304) (IN), TLS handshake, Unknown (8):
+{ [19 bytes data]
+* (304) (IN), TLS handshake, Certificate (11):
+{ [2041 bytes data]
+* (304) (IN), TLS handshake, CERT verify (15):
+{ [80 bytes data]
+* (304) (IN), TLS handshake, Finished (20):
+{ [36 bytes data]
+* (304) (OUT), TLS handshake, Finished (20):
+} [36 bytes data]
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256 / [blank] / UNDEF
+* ALPN: server accepted h2
+* Server certificate:
+*  subject: CN=etamin.uz
+*  start date: Apr 17 10:12:45 2026 GMT
+*  expire date: Jul 16 10:12:44 2026 GMT
+*  subjectAltName: host "nexel-strapi.etamin.uz" matched cert's "*.etamin.uz"
+*  issuer: C=US; O=Let's Encrypt; CN=E8
+*  SSL certificate verify ok.
+* using HTTP/2
+* [HTTP/2] [1] OPENED stream for https://nexel-strapi.etamin.uz/api/products
+* [HTTP/2] [1] [:method: GET]
+* [HTTP/2] [1] [:scheme: https]
+* [HTTP/2] [1] [:authority: nexel-strapi.etamin.uz]
+* [HTTP/2] [1] [:path: /api/products]
+* [HTTP/2] [1] [user-agent: curl/8.7.1]
+* [HTTP/2] [1] [accept: */*]
+* [HTTP/2] [1] [authorization: Bearer c1de9ff034f52fbb58af76b87576b299d816aedda629e685b4b37b055f54dd6d5a4cd5c699322200d31fde47a91d146124b725d0398736336041f7f02df3e7e37fa6a0de1856caed75165f71de42637b09382cbe2a109d54c6d88c61175bb2cc59dc49ed00ef3202b894da8a1dba65fa765c5c20a06784c0b4a2116c5ad952f8]
+> GET /api/products HTTP/2
+> Host: nexel-strapi.etamin.uz
+> User-Agent: curl/8.7.1
+> Accept: */*
+> Authorization: Bearer c1de9ff034f52fbb58af76b87576b299d816aedda629e685b4b37b055f54dd6d5a4cd5c699322200d31fde47a91d146124b725d0398736336041f7f02df3e7e37fa6a0de1856caed75165f71de42637b09382cbe2a109d54c6d88c61175bb2cc59dc49ed00ef3202b894da8a1dba65fa765c5c20a06784c0b4a2116c5ad952f8
+> 
+* Request completely sent off
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0< HTTP/2 200 
+< date: Thu, 14 May 2026 10:37:32 GMT
+< content-type: application/json; charset=utf-8
+< content-length: 5868
+< access-control-allow-credentials: true
+< access-control-allow-origin: 
+< content-security-policy: connect-src 'self' https:;img-src 'self' data: blob: res.cloudinary.com;media-src 'self' data: blob: res.cloudinary.com;default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline'
+< referrer-policy: no-referrer
+< strict-transport-security: max-age=31536000; includeSubDomains
+< vary: Origin
+< x-content-type-options: nosniff
+< x-dns-prefetch-control: off
+< x-download-options: noopen
+< x-frame-options: SAMEORIGIN
+< x-permitted-cross-domain-policies: none
+< x-powered-by: Strapi <strapi.io>
+< cf-cache-status: DYNAMIC
+< nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+< report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=tdQd42RzptqWEE2c0wXpSV50y49wQzb1sUtJzUoJyqUNlhz1WYarSjAtTUShxXnlEmVi3mNjIyUa94SbmPmmqXnA6YXBe75iyJROfubvudYvMu%2B41wTDUdM0SZVDe9lKIzDIoG0CsqXW"}]}
+< server: cloudflare
+< cf-ray: 9fb9449aaf19dcc0-FRA
+< alt-svc: h3=":443"; ma=86400
+< 
+{ [1360 bytes data]
+100  5868  100  5868    0     0   2587      0  0:00:02  0:00:02 --:--:--  2587100  5868  100  5868    0     0   2587      0  0:00:02  0:00:02 --:--:--  2586
+* Connection #0 to host nexel-strapi.etamin.uz left intact
+{"data":[{"id":2,"documentId":"c3kmc06rayyul5cbyzxbgeal","title":"Nexel Aura Pro","slug":"aura-pro","subtitle":"Professional Hair Care","shortDescription":"The Nexel Aura Pro redefines modern hair drying with precision airflow engineering and intelligent heat control. Designed for fast, balanced performance while protecting natural shine and smoothness.","description":"The Nexel Aura Pro redefines modern hair drying with precision airflow engineering and intelligent heat control. Designed for fast, balanced performance while protecting natural shine and smoothness.","price":399,"comparePrice":400,"badge":"bestseller","stock":69,"featured":true,"heroProduct":true,"seoTitle":"Nexel Aura Pro Hair Dryer","seoDescription":"Premium ionic hair dryer with intelligent heat control, high-speed airflow, and salon-grade performance for smooth professional styling.","createdAt":"2026-05-07T16:49:30.375Z","updatedAt":"2026-05-07T16:51:12.707Z","publishedAt":"2026-05-07T16:51:19.839Z"},{"id":4,"documentId":"s925e8fdyn0r625mnrrnl2u0","title":"Nexel Steam One","slug":"nexel-steam-one","subtitle":"Precision Garment Care","shortDescription":"Premium smart garment steamer engineered for fast wrinkle removal, balanced steam pressure, and refined everyday fabric care.","description":"The Nexel Steam One combines intelligent steam technology with a minimalist premium design to deliver smooth, effortless garment care. Engineered for fast heat-up, balanced steam distribution, and modern fabric protection, it transforms daily clothing maintenance into a refined experience.","price":499,"comparePrice":599,"badge":"new","stock":32,"featured":true,"heroProduct":false,"seoTitle":"Nexel Steam One — Premium Smart Garment Steamer","seoDescription":"Luxury smart garment steamer with intelligent steam control, fast heat-up, and premium fabric care technology for modern living.","createdAt":"2026-05-12T09:43:59.659Z","updatedAt":"2026-05-12T09:44:29.717Z","publishedAt":"2026-05-12T09:44:39.001Z"},{"id":10,"documentId":"m38vfev59ztgvn792jazlyqp","title":"De Longhi ivp7 Superic","slug":"De-Longhi-vp7","subtitle":"Super Quick In Prepearing, Smooth and Easy ","shortDescription":"Precision-engineered Italian brewing technology that transforms fresh beans into a flawlessly balanced, barista-quality espresso every single morning, right at home.","description":"Precision-engineered Italian brewing technology that transforms fresh beans into a flawlessly balanced, barista-quality espresso every single morning, right at home.Precision-engineered Italian brewing technology that transforms fresh beans into a flawlessly balanced, barista-quality espresso every single morning, right at home.","price":169,"comparePrice":189,"badge":"best seller","stock":5,"featured":true,"heroProduct":false,"seoTitle":"De'Longhi Magnifica — Automatic Espresso & Coffee Machine","seoDescription":"Experience Italian craftsmanship in every cup. The De'Longhi Magnifica transforms fresh beans into barista-quality espresso at the touch .","createdAt":"2026-05-12T18:23:03.521Z","updatedAt":"2026-05-12T18:23:03.521Z","publishedAt":"2026-05-12T18:23:08.760Z"},{"id":6,"documentId":"v9dom2ro7ukz2hxwfp3if06u","title":"Nexel Steam One","slug":"nexel-steam-on","subtitle":"Precision Garment Care","shortDescription":"Premium smart garment steamer engineered for fast wrinkle removal, balanced steam pressure, and refined everyday fabric care.","description":"The Nexel Steam One combines intelligent steam technology with a minimalist premium design to deliver smooth, effortless garment care. Engineered for fast heat-up, balanced steam distribution, and modern fabric protection, it transforms daily clothing maintenance into a refined experience.","price":499,"comparePrice":599,"badge":"new","stock":32,"featured":true,"heroProduct":false,"seoTitle":"Nexel Steam One Premium Garment Steamer","seoDescription":"Premium smart garment steamer with intelligent steam control, modern minimalist design, and professional fabric care performance.","createdAt":"2026-05-12T16:04:54.437Z","updatedAt":"2026-05-12T16:07:30.985Z","publishedAt":"2026-05-12T16:07:37.725Z"},{"id":8,"documentId":"ffv967pd4x2ae64ostrxitir","title":"delonghi","slug":"coffe-machine","subtitle":"enjoy cup of tea ","shortDescription":"make coffee whenever you want","description":"make coffee whenever you want, enjoy cup of tea, quality on the everysingle droplet ","price":139,"comparePrice":159,"badge":"new","stock":2,"featured":true,"heroProduct":false,"seoTitle":"delonghi One Premium Garment Steamer","seoDescription":"De Longhi One Premium Garment machine ","createdAt":"2026-05-12T17:49:41.876Z","updatedAt":"2026-05-12T17:49:41.876Z","publishedAt":"2026-05-12T17:49:47.108Z"},{"id":13,"documentId":"edvkyd9riwie0esms5a51tr0","title":"Nexel Steam One Ultra","slug":"nexel-steam-one-ultra","subtitle":"Precision Garment Care","shortDescription":"Premium smart garment steamer engineered for fast wrinkle removal, balanced steam pressure, and refined everyday fabric care.","description":"The Nexel Steam One combines intelligent steam technology with a minimalist premium design to deliver smooth, effortless garment care. Engineered for fast heat-up, balanced steam distribution, and modern fabric protection, it transforms daily clothing maintenance into a refined experience.","price":499,"comparePrice":599,"badge":"trend","stock":32,"featured":true,"heroProduct":false,"seoTitle":"SteamOne Portable Garment Steamer — Premium Smart Fabric Care","seoDescription":"Compact premium garment steamer with fast heat-up, continuous steam technology, and modern minimalist design for effortless everyday fabric care.","createdAt":"2026-05-13T15:17:46.646Z","updatedAt":"2026-05-13T15:22:18.377Z","publishedAt":"2026-05-13T15:22:29.522Z"}],"meta":{"pagination":{"page":1,"pageSize":25,"pageCount":1,"total":6}}}
