@@ -93,7 +93,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
   return (
     <section className="w-full">
       <div 
-        className="relative w-full h-[77vh] overflow-hidden group"
+        className="relative w-full h-[72vh] overflow-hidden group"
         style={{ backgroundColor: currentSlide.bgColor ?? '#111111' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -127,24 +127,24 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
 
             {/* Layer 3 — Content Layout (Balanced Proportional Split) */}
 
-            <div className="absolute inset-0 z-10 flex w-full h-full">
-              {/* Left 50% — Text Content (Moved slightly away from center) */}
-              <div className="w-1/2 h-full flex items-center justify-end pr-[10%] md:pr-[12%]">
-                <div className="max-w-[90%] md:max-w-[80%]">
+            <div className="absolute inset-0 z-10 flex flex-col md:flex-row w-full h-full pt-16 md:pt-0">
+              {/* Top/Left — Text Content */}
+              <div className="w-full md:w-1/2 h-[45%] md:h-full flex items-end md:items-center justify-center md:justify-end px-4 md:pr-[12%] pb-4 md:pb-0 z-20">
+                <div className="max-w-full md:max-w-[80%]">
                   <motion.div
                     variants={textContainerVariants}
-                    className="flex flex-col items-start text-left"
+                    className="flex flex-col items-center md:items-start text-center md:text-left"
                   >
                     <motion.p
                       variants={textItemVariants}
-                      className="text-white/80 text-xs font-bold tracking-[0.3em] uppercase mb-4"
+                      className="text-white/80 text-[10px] sm:text-xs font-bold tracking-[0.3em] uppercase mb-2 md:mb-4"
                     >
                       {currentSlide.subtitle}
                     </motion.p>
 
                     <motion.h1
                       variants={textItemVariants}
-                      className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1] mb-6"
+                      className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.1] md:leading-[1] mb-3 md:mb-6"
                     >
                       {currentSlide.title}
                     </motion.h1>
@@ -152,7 +152,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                     {currentSlide.description && (
                       <motion.p
                         variants={textItemVariants}
-                        className="text-white/60 text-sm md:text-base leading-relaxed mb-10 max-w-[450px]"
+                        className="text-white/60 text-xs sm:text-sm md:text-base leading-relaxed mb-6 md:mb-10 max-w-[90%] md:max-w-[450px]"
                       >
                         {currentSlide.description}
                       </motion.p>
@@ -163,7 +163,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                         <motion.button
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.98 }}
-                          className="bg-white text-black px-10 py-3.5 rounded-full text-xs font-bold hover:bg-white/90 transition-all shadow-lg"
+                          className="bg-white text-black px-8 md:px-10 py-2.5 md:py-3.5 rounded-full text-[10px] md:text-xs font-bold hover:bg-white/90 transition-all shadow-lg"
                         >
                           {currentSlide.buttonText || "Learn more"}
                         </motion.button>
@@ -173,9 +173,9 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                 </div>
               </div>
 
-              {/* Right 50% — Product PNG (Moved slightly away from center) */}
-              <div className="w-1/2 h-full flex items-center justify-start pl-[3%] md:pl-[4%] pr-[3%] py-[20px]">
-                <div className="relative w-full h-full">
+              {/* Bottom/Right — Product PNG */}
+              <div className="w-full md:w-1/2 h-[55%] md:h-full flex items-center justify-center md:justify-start px-6 md:pl-[4%] md:pr-[3%] pb-12 md:py-[20px] z-10">
+                <div className="relative w-full h-full max-w-[280px] sm:max-w-[340px] md:max-w-none">
                   {currentSlide.phone && (
                     <Image
                       src={currentSlide.phone}

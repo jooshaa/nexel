@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Product as CMSProduct } from "@/lib/cms/types";
@@ -12,6 +13,7 @@ interface FeaturedProductsProps {
 }
 
 export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
+  const [activeTab, setActiveTab] = useState("Featured");
   const validProducts = (products || []).filter(p => {
     if (!p) return false;
     const images = p.images;
@@ -21,11 +23,21 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
   
   if (validProducts.length === 0) return null;
 
-  const featured = validProducts[0];
-  const smallCards = validProducts.slice(1, 5);
-  
-  const tabs = ["Trending Now", "New Arrivals", "Best Sellers", "Coming Soon"];
+  const tabs = ["Featured", "Trending", "New Arrivals"];
 
+  // Filter products based on active tab and product badge
+  const filteredProducts = useMemo(() => {
+    if (activeTab === "Featured") return validProducts;
+    
+    const matched = validProducts.filter(p => 
+      p.badge?.toLowerCase().includes(activeTab.toLowerCase().split(' ')[0])
+    );
+    // If no products match the specific badge, fallback to showing all valid products
+    return matched.length > 0 ? matched : validProducts;
+  }, [validProducts, activeTab]);
+
+  const featured = filteredProducts[0];
+  const smallCards = filteredProducts.slice(1, 5);
   return (
     <section className="w-full py-16 sm:py-20 md:py-28 bg-[#f7f7f7]">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 md:px-12 lg:px-16">
@@ -34,25 +46,39 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-black mb-3">
             {title}
           </h2>
-          <div className="w-16 h-1 bg-[#ff6600] mx-auto" />
+          <div className="w-16 h-[2px] bg-black mx-auto" />
         </div>
 
         <div className="mb-10 sm:mb-12 flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-10 gap-y-3">
-          {tabs.map((tab, idx) => (
+          {tabs.map((tab) => (
             <button key={tab} type="button"
-              className={["text-xs sm:text-sm md:text-[15px] font-semibold transition-colors",
-                idx === 0 ? "text-[#ff6600]" : "text-gray-900 hover:text-[#ff6600]"].join(" ")}
+              onClick={() => setActiveTab(tab)}
+              className={["text-xs sm:text-sm md:text-[15px] font-semibold transition-all duration-300",
+                activeTab === tab ? "text-black" : "text-gray-400 hover:text-black"].join(" ")}
             >
               <span className="relative inline-block pb-2">
                 {tab}
-                {idx === 0 && <span className="absolute left-0 right-0 -bottom-[1px] h-[2px] bg-[#ff6600]" />}
+                {activeTab === tab && (
+                  <motion.span 
+                    layoutId="activeTabIndicator"
+                    className="absolute left-0 right-0 -bottom-[1px] h-[2px] bg-black" 
+                  />
+                )}
               </span>
             </button>
           ))}
         </div>
 
         {/* Main Featured Banner */}
-        {featured && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {featured && (
           <Link href={`/product/${featured.slug}`}>
             <motion.div
               whileHover={{ y: -3 }}
@@ -125,6 +151,8 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
             </Link>
           ))}
         </div>
+        </motion.div>
+        </AnimatePresence>
 
       </div>
     </section>
