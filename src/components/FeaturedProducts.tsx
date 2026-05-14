@@ -97,7 +97,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                   />
                 </div>
                 <div className="flex flex-col justify-center px-8 md:px-16 py-12 md:py-20">
-                  <h3 className="text-3xl md:text-5xl font-heading font-medium tracking-tight text-black leading-tight">
+                  <h3 className="text-2xl md:text-4xl font-heading font-medium tracking-tight text-black leading-tight">
                     {featured.title}
                   </h3>
                   <p className="mt-5 text-base md:text-lg text-gray-500 max-w-[36ch] leading-relaxed">

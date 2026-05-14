@@ -129,7 +129,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
 
             <div className="absolute inset-0 z-10 flex flex-col md:flex-row w-full h-full pt-16 md:pt-0">
               {/* Top/Left — Text Content */}
-              <div className="w-full md:w-1/2 h-[45%] md:h-full flex items-end md:items-center justify-center md:justify-end px-4 md:pr-[12%] pb-4 md:pb-0 z-20">
+              <div className="w-full md:w-1/2 h-[40%] md:h-full flex items-end md:items-center justify-center md:justify-end px-4 md:pr-[12%] pb-4 md:pb-0 z-20">
                 <div className="max-w-full md:max-w-[80%]">
                   <motion.div
                     variants={textContainerVariants}
@@ -174,8 +174,8 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
               </div>
 
               {/* Bottom/Right — Product PNG */}
-              <div className="w-full md:w-1/2 h-[55%] md:h-full flex items-center justify-center md:justify-start px-6 md:pl-[4%] md:pr-[3%] pb-12 md:py-[20px] z-10">
-                <div className="relative w-full h-full max-w-[280px] sm:max-w-[340px] md:max-w-none">
+              <div className="w-full md:w-1/2 h-[60%] md:h-full flex items-center justify-center md:justify-start px-6 md:pl-[4%] md:pr-[3%] pb-6 md:py-[20px] z-10">
+                <div className="relative w-full h-full md:max-w-none">
                   {currentSlide.phone && (
                     <Image
                       src={currentSlide.phone}
@@ -213,7 +213,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
         </button>
 
         {/* LONG HORIZONTAL BULLETS (Xiaomi Style) */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
+        <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
           {slides.map((slide, index) => (
             <button
               key={slide.id}

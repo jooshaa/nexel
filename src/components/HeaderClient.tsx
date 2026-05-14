@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
-import { Search, Menu as MenuIcon, X } from "lucide-react";
+import { Search, Menu as MenuIcon, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { MegaMenu } from "./MegaMenu";
 import { MENU_DATA } from "@/lib/menuData";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavbarSection, Product } from "@/lib/cms/types";
+import { getMediaURL } from "@/lib/cms/api";
 
 interface HeaderClientProps {
   navbarSections: NavbarSection[];
@@ -125,7 +126,10 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 relative z-50 shrink-0"
+            className={cn(
+              "flex items-center gap-2 relative z-50 shrink-0 transition-opacity duration-300",
+              isSearchOpen ? "opacity-0 pointer-events-none invisible md:visible md:opacity-100" : "opacity-100"
+            )}
             onClick={() => {
               setIsMobileMenuOpen(false);
               setIsSearchOpen(false);
@@ -134,86 +138,101 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
             <Image
               src="/logo.svg"
               alt="Nexel"
-              width={120}
-              height={40}
+              width={100}
+              height={30}
               priority
-              className="mix-blend-multiply"
+              className="mix-blend-multiply w-auto h-7 md:h-8"
             />
           </Link>
 
-          {/* Desktop Navigation - Centered */}
+          {/* Desktop Navigation - Centered (Flex-grow container) */}
           {!isSearchOpen && (
             <div className="flex-1 hidden md:flex justify-center px-4 overflow-hidden">
               <nav
                 className="flex items-center space-x-4 lg:space-x-8 overflow-x-auto no-scrollbar"
                 onMouseLeave={handleMouseLeave}
               >
-              {navbarSections.map((section) => (
-                <div
-                  key={section.id}
-                  className="py-2"
-                  onMouseEnter={() => handleMouseEnter(section.title)}
-                >
-                  <Link
-                    href={section.category ? `/category/${section.category.slug}` : "#"}
-                    className={`text-[16px] font-medium transition-colors relative group py-2 ${
-                      activeCategory === section.title
-                        ? "text-[#043927]"
-                        : "text-gray-800 hover:text-[#043927]"
-                    }`}
+                {navbarSections.map((section) => (
+                  <div
+                    key={section.id}
+                    className="py-2"
+                    onMouseEnter={() => handleMouseEnter(section.title)}
                   >
-                    {section.title}
-                    <span
-                      className={cn(
-                        "absolute -bottom-1 left-0 h-[2px] bg-[#043927] transition-all duration-300",
-                        activeCategory === section.title ? "w-full" : "w-0 group-hover:w-full"
-                      )}
-                    />
-                  </Link>
-                </div>
-              ))}
-            </nav>
-          </div>
+                    <Link
+                      href={section.category ? `/category/${section.category.slug}` : "#"}
+                      className={`text-[16px] font-medium transition-colors relative group py-2 ${
+                        activeCategory === section.title
+                          ? "text-[#043927]"
+                          : "text-gray-800 hover:text-[#043927]"
+                      }`}
+                    >
+                      {section.title}
+                      <span
+                        className={cn(
+                          "absolute -bottom-1 left-0 h-[2px] bg-[#043927] transition-all duration-300",
+                          activeCategory === section.title ? "w-full" : "w-0 group-hover:w-full"
+                        )}
+                      />
+                    </Link>
+                  </div>
+                ))}
+              </nav>
+            </div>
           )}
 
-          {/* Search Bar - Replaces Nav when open */}
+          {/* Search Bar Container */}
           <AnimatePresence>
             {isSearchOpen && (
               <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "100%", maxWidth: "600px" }}
-                exit={{ opacity: 0, width: 0 }}
-                className="absolute left-1/2 -translate-x-1/2 flex items-center px-4"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className={cn(
+                  "absolute inset-0 z-[60] bg-white flex items-center px-4 md:relative md:inset-auto md:flex-1 md:bg-transparent md:max-w-[600px] md:mx-auto"
+                )}
                 ref={searchRef}
               >
-                <div className="relative w-full">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search products..."
-                    className="w-full bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-[#043927] transition-all"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-
-                  {/* Search Results Dropdown */}
-                  <AnimatePresence>
-                    {(searchResults.length > 0 || isSearching) && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[60] min-w-[320px]"
+                <div className="flex items-center w-full gap-3">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search products..."
+                      className="w-full bg-gray-100 md:bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-[#043927] transition-all"
+                    />
+                    
+                    {/* Clear button (only shown if query exists) */}
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black p-1"
                       >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Close button (Cancel) for mobile only */}
+                  <button
+                    onClick={() => setIsSearchOpen(false)}
+                    className="text-sm font-medium text-gray-600 hover:text-black md:hidden shrink-0 pr-2"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                {/* Search Results Dropdown */}
+                <AnimatePresence>
+                  {(searchResults.length > 0 || isSearching) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[100] min-w-[320px] md:min-w-full"
+                    >
                         <div className="p-2">
                           {isSearching ? (
                             <div className="p-4 text-center text-sm text-gray-500">Searching...</div>
@@ -255,22 +274,23 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Right Section */}
-          <div className="flex items-center shrink-0 space-x-2">
+          <div className={cn(
+            "flex items-center shrink-0 space-x-2 transition-opacity duration-300",
+            isSearchOpen ? "opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto" : "opacity-100"
+          )}>
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className={cn(
                 "p-2 rounded-full transition-all duration-300",
-                isSearchOpen ? "bg-gray-100 text-black" : "text-gray-600 hover:text-black hover:bg-gray-50"
+                isSearchOpen ? "bg-gray-100 text-black hidden md:flex" : "text-gray-600 hover:text-black hover:bg-gray-50 flex"
               )}
               aria-label="Search"
             >
-              {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              <Search className="w-5 h-5" />
             </button>
 
             {/* Mobile Menu Button */}
@@ -332,14 +352,29 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                           exit={{ height: 0, opacity: 0 }}
                           className="overflow-hidden"
                         >
-                          <ul className="py-2 pl-4 space-y-3">
+                          <ul className="py-2 px-1 space-y-3">
                             {section.featuredProducts?.map((product) => (
                               <li key={product.id}>
                                 <Link
                                   href={`/product/${product.slug}`}
-                                  className="text-gray-600 hover:text-[#043927] text-sm font-medium"
+                                  className="flex items-center gap-4 p-3 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-all active:scale-95 group"
+                                  onClick={() => setIsMobileMenuOpen(false)}
                                 >
-                                  {product.title}
+                                  <div className="w-16 h-16 relative bg-white rounded-xl overflow-hidden flex-shrink-0 border border-gray-100 p-1">
+                                    {product.images && product.images[0] && (
+                                      <Image
+                                        src={getMediaURL(product.images[0].url)}
+                                        alt={product.title}
+                                        fill
+                                        sizes="64px"
+                                        className="object-contain"
+                                      />
+                                    )}
+                                  </div>
+                                  <span className="text-gray-900 text-[15px] font-semibold tracking-tight">
+                                    {product.title}
+                                  </span>
+                                  <ChevronRight className="w-4 h-4 text-gray-300 ml-auto group-hover:text-black transition-colors" />
                                 </Link>
                               </li>
                             ))}
