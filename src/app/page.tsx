@@ -1,8 +1,6 @@
 import { Metadata } from "next";
-import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { FeaturedProducts } from "@/components/FeaturedProducts";
-import { Footer } from "@/components/Footer";
 import { getHomepageData } from "@/lib/cms/api";
 import { HeroSlide, FeaturedSection, Product } from "@/lib/cms/types";
 
@@ -36,8 +34,7 @@ export default async function Home() {
   const mainFeaturedSection = featuredSections.find(s => s.styleVariant === 'grid') || featuredSections[0];
 
   return (
-    <main className="min-h-screen flex flex-col">
-      <Header />
+    <>
       
       {/* Hero Carousel with CMS Slides */}
       <Hero slides={heroSlides} />
@@ -67,7 +64,6 @@ export default async function Home() {
         />
       ))}
 
-      <Footer />
-    </main>
+    </>
   );
 }

@@ -129,6 +129,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   alt="background"
                   fill
                   priority={true}
+                  quality={90}
                   sizes="(max-width: 768px) 200vw, 100vw"
                   className="object-cover object-right-top md:hidden"
                 />
@@ -140,6 +141,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   alt="background"
                   fill
                   priority={true}
+                  quality={90}
                   sizes="100vw"
                   className="hidden md:block object-cover object-right-bottom"
                 />

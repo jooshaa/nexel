@@ -8,6 +8,7 @@ import { ImageGallery } from "./ImageGallery";
 import { ColorSelector } from "./ColorSelector";
 import { Accordion } from "./Accordion";
 import { AddToCartButton } from "./AddToCartButton";
+import { ArrowLeft } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { ProductNav } from "./ProductNav";
 
@@ -61,7 +62,18 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
     <div className="min-h-screen bg-white">
 
       {/* Main section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 lg:pt-28 pb-14 sm:pb-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
+        {/* Back Button */}
+        <div className="mb-8 lg:mb-12">
+          <Link
+            href="/"
+            className="group flex items-center gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-gray-400 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Back to Home
+          </Link>
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-20 items-start">
 
           {/* LEFT — Product Info */}

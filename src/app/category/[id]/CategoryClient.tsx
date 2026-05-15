@@ -18,7 +18,7 @@ interface CategoryClientProps {
 
 export function CategoryClient({ name, products }: CategoryClientProps) {
   return (
-    <div className="min-h-screen bg-white pt-20 sm:pt-24 pb-14 sm:pb-20">
+    <div className="min-h-screen bg-white pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Breadcrumbs */}
         <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-400 mb-6 sm:mb-8">
