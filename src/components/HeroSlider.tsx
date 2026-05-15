@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -11,9 +11,9 @@ export interface Slide {
   title: string;
   subtitle: string;
   description: string;
-  image: string;      // background image (optional)
-  phone: string;      // product PNG without background
-  bgColor: string;    // background color
+  image: string;         // full-width desktop background image
+  mobileImage?: string;  // optional mobile-optimised crop
+  bgColor: string;       // background color (fallback)
   link: string;
   buttonText?: string;
 }
@@ -65,6 +65,7 @@ const imageVariants: Variants = {
 export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const touchStartX = useRef<number | null>(null);
 
   const goToSlide = useCallback((index: number) => {
     setCurrentIndex(index);
@@ -91,12 +92,23 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
   const currentSlide = slides[currentIndex];
 
   return (
-    <section className="w-full">
+    <section className="w-full mt-[55px]">
       <div 
-        className="relative w-full h-[72vh] overflow-hidden group"
+        className="relative w-full h-[100svh] md:h-[72vh] overflow-hidden group"
         style={{ backgroundColor: currentSlide.bgColor ?? '#111111' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={(e) => {
+          touchStartX.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          if (touchStartX.current === null) return;
+          const delta = touchStartX.current - e.changedTouches[0].clientX;
+          if (Math.abs(delta) > 50) {
+            delta > 0 ? nextSlide() : prevSlide();
+          }
+          touchStartX.current = null;
+        }}
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -107,9 +119,21 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
             className="absolute inset-0 w-full h-full"
           >
             {/* Layer 1 — Background Image */}
-            <motion.div 
+            <motion.div
               className="absolute inset-0 z-0 w-full h-full"
             >
+              {/* Mobile image */}
+              {(currentSlide.mobileImage || currentSlide.image) && (
+                <Image
+                  src={currentSlide.mobileImage || currentSlide.image}
+                  alt="background"
+                  fill
+                  priority={true}
+                  sizes="(max-width: 768px) 200vw, 100vw"
+                  className="object-cover object-right-top md:hidden"
+                />
+              )}
+              {/* Desktop image */}
               {currentSlide.image && (
                 <Image
                   src={currentSlide.image}
@@ -117,20 +141,23 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   fill
                   priority={true}
                   sizes="100vw"
-                  className="object-cover object-center"
+                  className="hidden md:block object-cover object-right-bottom"
                 />
               )}
             </motion.div>
 
-            {/* Layer 2 — Darkening Overlay */}
-            <div className="absolute inset-0 z-[5] bg-black/10 pointer-events-none" />
+            {/* Layer 2 — Gradient overlays */}
+            {/* Mobile: strong top gradient so text at top is readable */}
+            <div className="absolute inset-0 z-[5] md:hidden bg-gradient-to-b from-black/70 via-black/20 to-transparent pointer-events-none" />
+            {/* Desktop: subtle darkening only */}
+            <div className="absolute inset-0 z-[5] hidden md:block bg-black/10 pointer-events-none" />
 
-            {/* Layer 3 — Content Layout (Balanced Proportional Split) */}
-
-            <div className="absolute inset-0 z-10 flex flex-col md:flex-row w-full h-full pt-16 md:pt-0">
-              {/* Top/Left — Text Content */}
-              <div className="w-full md:w-1/2 h-[40%] md:h-full flex items-end md:items-center justify-center md:justify-end px-4 md:pr-[12%] pb-4 md:pb-0 z-20">
-                <div className="max-w-full md:max-w-[80%]">
+            {/* Layer 3 — Content Layout */}
+            {/* Mobile: text pinned to top. Desktop: centered left */}
+            <div className="absolute inset-0 z-10 flex flex-col justify-start md:justify-center w-full h-full pt-8 md:pt-0 pb-0 md:pb-0 px-6 md:px-[10%]">
+              {/* Text Content */}
+              <div className="w-full max-w-2xl z-20">
+                <div>
                   <motion.div
                     variants={textContainerVariants}
                     className="flex flex-col items-center md:items-start text-center md:text-left"
@@ -170,22 +197,6 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                       </Link>
                     </motion.div>
                   </motion.div>
-                </div>
-              </div>
-
-              {/* Bottom/Right — Product PNG */}
-              <div className="w-full md:w-1/2 h-[60%] md:h-full flex items-center justify-center md:justify-start px-6 md:pl-[4%] md:pr-[3%] pb-6 md:py-[20px] z-10">
-                <div className="relative w-full h-full md:max-w-none">
-                  {currentSlide.phone && (
-                    <Image
-                      src={currentSlide.phone}
-                      alt={currentSlide.title}
-                      fill
-                      priority={true}
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-contain"
-                    />
-                  )}
                 </div>
               </div>
             </div>

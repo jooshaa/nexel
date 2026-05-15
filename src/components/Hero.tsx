@@ -17,8 +17,7 @@ export function Hero({ slides }: HeroProps) {
       title: slide.title || "Nexel Premium",
       subtitle: slide.subtitle || "",
       description: slide.description || "", 
-      image: slide.bgColor?.url ? getMediaURL(slide.bgColor.url) : "",
-      phone: slide.image?.url ? getMediaURL(slide.image.url) : "",
+      image: slide.bgColor?.url ? getMediaURL(slide.bgColor.url) : (slide.image?.url ? getMediaURL(slide.image.url) : ""),
       bgColor: "#111111", // Default background color if needed
       link: slide.buttonLink || "/",
       buttonText: slide.buttonText || "Discover more",

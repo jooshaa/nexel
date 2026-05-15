@@ -98,7 +98,6 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
       'sort': 'order:asc',
       'populate': {
         image: true,
-        phone: true,
         bgColor: true,
       },
     },
