@@ -23,7 +23,8 @@ const CMS_TOKEN = process.env.CMS_API_TOKEN;
 async function cmsGet<T>(
   path: string,
   params: any = {},
-  revalidate: number = 60
+  revalidate: number = 60,
+  locale?: string
 ): Promise<T> {
   const url = new URL(`${CMS_URL}/api${path}`);
   
@@ -53,15 +54,17 @@ async function cmsGet<T>(
 
   try {
     // Attempt to get locale from cookies for server-side fetching
-    let currentLocale = 'ru';
-    try {
-      const cookieStore = await cookies();
-      const localeCookie = cookieStore.get('NEXT_LOCALE');
-      if (localeCookie?.value) {
-        currentLocale = localeCookie.value;
+    let currentLocale = locale || 'ru';
+    if (!locale) {
+      try {
+        const cookieStore = await cookies();
+        const localeCookie = cookieStore.get('NEXT_LOCALE');
+        if (localeCookie?.value) {
+          currentLocale = localeCookie.value;
+        }
+      } catch (e) {
+        // In case we are not in a server component context (or statically generating), silently default to 'ru'
       }
-    } catch (e) {
-      // In case we are not in a server component context (or statically generating), silently default to 'ru'
     }
 
     // Append locale param if not explicitly overridden in params
@@ -99,7 +102,7 @@ async function cmsGet<T>(
 
 // ── Hero Slides ───────────────────────────────────────────────────────────────
 
-export async function getHeroSlides(): Promise<HeroSlide[]> {
+export async function getHeroSlides(locale?: string): Promise<HeroSlide[]> {
   const data = await cmsGet<StrapiResponse<HeroSlide[]>>(
     '/hero-slides',
     {
@@ -110,7 +113,8 @@ export async function getHeroSlides(): Promise<HeroSlide[]> {
         bgColor: true,
       },
     },
-    300 
+    300,
+    locale
   );
   return data.data;
 }
@@ -133,7 +137,7 @@ export async function getProducts(page = 1, pageSize = 24): Promise<StrapiRespon
 /**
  * Fetches a single product by slug (Strapi v5 syntax)
  */
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export async function getProductBySlug(slug: string, locale?: string): Promise<Product | null> {
   const data = await cmsGet<StrapiResponse<Product[]>>(
     '/products',
     {
@@ -148,12 +152,13 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         'category.products.images'
       ],
     },
-    60
+    60,
+    locale
   );
   return data?.data?.[0] || null;
 }
 
-export async function getFeaturedProducts(): Promise<Product[]> {
+export async function getFeaturedProducts(locale?: string): Promise<Product[]> {
   const data = await cmsGet<StrapiResponse<Product[]>>(
     '/products',
     {
@@ -161,12 +166,13 @@ export async function getFeaturedProducts(): Promise<Product[]> {
       'populate': '*',
       'sort': 'createdAt:desc',
     },
-    120
+    120,
+    locale
   );
   return data.data;
 }
 
-export async function getHeroProducts(): Promise<Product[]> {
+export async function getHeroProducts(locale?: string): Promise<Product[]> {
   const data = await cmsGet<StrapiResponse<Product[]>>(
     '/products',
     {
@@ -174,7 +180,8 @@ export async function getHeroProducts(): Promise<Product[]> {
       'populate': '*',
       'sort': 'createdAt:desc',
     },
-    120
+    120,
+    locale
   );
   return data.data;
 }
@@ -240,14 +247,15 @@ export async function getCategories(): Promise<Category[]> {
   return data.data;
 }
 
-export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+export async function getCategoryBySlug(slug: string, locale?: string): Promise<Category | null> {
   const data = await cmsGet<StrapiResponse<Category[]>>(
     '/categories',
     {
       'filters[slug][$eq]': slug,
       'populate': '*',
     },
-    120
+    120,
+    locale
   );
   return data.data[0] ?? null;
 }
@@ -257,7 +265,7 @@ export async function getCategoryBySlug(slug: string): Promise<Category | null> 
 /**
  * Fetches all active featured sections (Strapi v5 syntax)
  */
-export async function getFeaturedSections(): Promise<FeaturedSection[]> {
+export async function getFeaturedSections(locale?: string): Promise<FeaturedSection[]> {
   const data = await cmsGet<StrapiResponse<FeaturedSection[]>>('/featured-sections', {
     'filters[active][$eq]': 'true',
     'sort': 'order:asc',
@@ -269,7 +277,7 @@ export async function getFeaturedSections(): Promise<FeaturedSection[]> {
         },
       },
     },
-  }, 120);
+  }, 120, locale);
   
   return data?.data || [];
 }
@@ -302,12 +310,12 @@ export async function getNavbarSections(): Promise<NavbarSection[]> {
 
 // ── Homepage data bundle ──────────────────────────────────────────────────────
 
-export async function getHomepageData() {
+export async function getHomepageData(locale?: string) {
   const [heroSlides, featuredSections, heroProducts, featuredProducts] = await Promise.all([
-    getHeroSlides(),
-    getFeaturedSections(),
-    getHeroProducts(),
-    getFeaturedProducts(),
+    getHeroSlides(locale),
+    getFeaturedSections(locale),
+    getHeroProducts(locale),
+    getFeaturedProducts(locale),
   ]);
 
   return { heroSlides, featuredSections, heroProducts, featuredProducts };

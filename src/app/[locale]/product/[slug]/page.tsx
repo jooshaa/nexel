@@ -6,21 +6,25 @@ import { ProductPageClient } from "@/components/product/ProductPageClient";
 import type { Metadata } from "next";
 
 interface ProductPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }
 
 export const revalidate = 60; // ISR revalidation every minute
 
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const locales = ["uz", "ru"];
+  
+  return locales.flatMap((locale) => 
+    slugs.map((slug) => ({ locale, slug }))
+  );
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   
   try {
-    const cmsProduct = await getProductBySlug(slug);
+    const cmsProduct = await getProductBySlug(slug, locale);
 
     if (!cmsProduct) notFound();
 
@@ -33,8 +37,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const { slug, locale } = await params;
+  const product = await getProductBySlug(slug, locale);
   
   if (!product) return { title: "Product Not Found" };
 

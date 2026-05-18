@@ -15,8 +15,8 @@ const LanguageContext = createContext<LanguageContextType>({
   t: (key) => key,
 });
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("uz");
+export function LanguageProvider({ children, initialLocale }: { children: ReactNode; initialLocale?: Locale }) {
+  const [locale, setLocaleState] = useState<Locale>(initialLocale || "uz");
 
   useEffect(() => {
     const saved = localStorage.getItem("nexel-locale") as Locale | null;
@@ -32,7 +32,19 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     setLocaleState(newLocale);
     localStorage.setItem("nexel-locale", newLocale);
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
-    window.location.reload(); // Reload so Server Components refetch with new locale
+    
+    // Update URL to the new locale
+    const pathname = window.location.pathname;
+    const segments = pathname.split('/');
+    const locales = ['uz', 'ru'];
+    
+    if (locales.includes(segments[1])) {
+      segments[1] = newLocale;
+    } else {
+      segments.splice(1, 0, newLocale);
+    }
+    
+    window.location.pathname = segments.join('/');
   };
 
   const t = (key: TranslationKey): string => {

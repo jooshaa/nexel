@@ -67,14 +67,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+import { Locale } from "@/lib/i18n";
+
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  
   return (
     <html
-      lang="en"
+      lang={locale}
       className={cn(
         "h-full",
         "antialiased",
@@ -85,7 +91,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <LanguageProvider>
+        <LanguageProvider initialLocale={locale as Locale}>
           <Header />
           <main className="flex-grow">
             {children}

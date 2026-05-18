@@ -12,15 +12,21 @@ export const metadata: Metadata = {
 // ISR: Revalidate homepage every 2 minutes
 export const revalidate = 120;
 
-export default async function Home() {
+export async function generateStaticParams() {
+  return [{ locale: "uz" }, { locale: "ru" }];
+}
+
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  
   let heroSlides: HeroSlide[] = [];
   let featuredSections: FeaturedSection[] = [];
   let heroProducts: Product[] = [];
   let individualFeatured: Product[] = [];
 
   try {
-    // Fetch dynamic CMS content
-    const data = await getHomepageData();
+    // Fetch dynamic CMS content with specific locale
+    const data = await getHomepageData(locale);
     heroSlides = data.heroSlides || [];
     featuredSections = data.featuredSections || [];
     heroProducts = data.heroProducts || [];
