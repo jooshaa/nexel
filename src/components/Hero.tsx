@@ -2,7 +2,7 @@
 
 import { HeroSlider, Slide } from "./HeroSlider";
 import { HeroSlide as CMSHeroSlide } from "@/lib/cms/types";
-import { getMediaURL } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
 
 interface HeroProps {
   slides: CMSHeroSlide[];

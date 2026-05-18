@@ -1,6 +1,6 @@
 import { Product as CMSProduct } from './types';
 import { ProductData as UIProductData, RelatedProduct as UIRelatedProduct } from '../productData';
-import { getMediaURL } from './api';
+import { getMediaURL } from './utils';
 
 
 /**

@@ -6,7 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Copy, LayoutGrid } from "lucide-react";
 import { NavbarSection } from "@/lib/cms/types";
-import { getMediaURL } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface MegaMenuProps {
   activeCategory: string | null;
@@ -16,6 +17,7 @@ interface MegaMenuProps {
 }
 
 export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouseLeave }: MegaMenuProps) {
+  const { t } = useLanguage();
   const [activeSubId, setActiveSubId] = useState<string | null>(null);
   const [prevCategory, setPrevCategory] = useState<string | null>(null);
 
@@ -57,7 +59,7 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                     <button
                       className={`text-base md:text-lg font-medium transition-colors w-full text-left flex items-center justify-between text-[#043927] font-bold`}
                     >
-                      Featured Products
+                      {t("featuredProducts")}
                       <span className="text-[#043927]">›</span>
                     </button>
                   </li>
@@ -106,6 +108,7 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                                   src={getMediaURL(Array.isArray(product.images) ? product.images[0]?.url : (product.images as any)?.url)} 
                                   alt={product.title}
                                   fill
+                                  sizes="200px"
                                   className="object-contain group-hover:scale-110 transition-transform duration-500 p-2"
                                 />
                               )}
@@ -117,7 +120,7 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                         ))
                       ) : (
                         <div className="col-span-full flex items-center justify-center h-48 text-gray-400">
-                          {activeSectionData.promoTitle || "Coming soon"}
+                          {activeSectionData.promoTitle || t("comingSoon")}
                         </div>
                       )}
                     </motion.div>
@@ -128,7 +131,7 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                 <div className="flex justify-end space-x-4 pt-6 mt-4 border-t border-gray-50">
                   <button className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors bg-gray-50 px-4 py-2 rounded-lg hover:bg-gray-100">
                     <Copy className="w-4 h-4" />
-                    <span>Accessories</span>
+                    <span>{t("accessories")}</span>
                   </button>
                   <Link 
                     href={activeSectionData.category ? `/category/${activeSectionData.category.slug}` : "#"}
@@ -136,7 +139,7 @@ export function MegaMenu({ activeCategory, navbarSections, onMouseEnter, onMouse
                     className="flex items-center space-x-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors bg-gray-50 px-4 py-2 rounded-lg hover:bg-gray-100"
                   >
                     <LayoutGrid className="w-4 h-4" />
-                    <span>All {activeSectionData.category?.name || "Series"}</span>
+                    <span>{t("all")} {activeSectionData.category?.name || t("allSeries")}</span>
                   </Link>
                 </div>
               </div>

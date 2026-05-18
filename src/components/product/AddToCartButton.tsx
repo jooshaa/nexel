@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface AddToCartButtonProps {
   name: string;
 }
 
 export function AddToCartButton({ name }: AddToCartButtonProps) {
+  const { t } = useLanguage();
   const [added, setAdded] = useState(false);
 
   const handleClick = () => {
@@ -26,7 +28,7 @@ export function AddToCartButton({ name }: AddToCartButtonProps) {
           : "bg-gray-900 text-white hover:bg-gray-700"
       }`}
     >
-      {added ? "✓ Added to Bag" : `Add to Bag — ${name}`}
+      {added ? t("addedToBag") : `${t("addToBag")} — ${name}`}
     </motion.button>
   );
 }

@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { Product as CMSProduct } from "@/lib/cms/types";
-import { getMediaURL } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface FeaturedProductsProps {
   title: string;
@@ -13,6 +14,7 @@ interface FeaturedProductsProps {
 }
 
 export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("Featured");
   const validProducts = (products || []).filter(p => {
     if (!p) return false;
@@ -24,6 +26,12 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
   if (validProducts.length === 0) return null;
 
   const tabs = ["Featured", "Trending", "New Arrivals"];
+
+  const tabLabels: Record<string, string> = {
+    Featured: t("featured"),
+    Trending: t("trending"),
+    "New Arrivals": t("newArrivals"),
+  };
 
   // Filter products based on active tab and product badge
   const filteredProducts = useMemo(() => {
@@ -57,7 +65,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                 activeTab === tab ? "text-black" : "text-gray-400 hover:text-black"].join(" ")}
             >
               <span className="relative inline-block pb-2">
-                {tab}
+                {tabLabels[tab]}
                 {activeTab === tab && (
                   <motion.span 
                     layoutId="activeTabIndicator"
@@ -91,7 +99,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                     src={getMediaURL(Array.isArray(featured.images) ? featured.images[0]?.url : (featured.images as any)?.url) || ''}
                     alt={featured.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 768px) 90vw, (max-width: 1400px) 50vw, 700px"
                     className="object-contain p-8 transition-transform duration-700 group-hover:scale-105"
                     priority
                   />
@@ -105,7 +113,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                   </p>
                   <div className="mt-10 md:mt-12">
                     <span className="inline-flex items-center rounded-full bg-black px-10 py-4 text-xs font-bold uppercase tracking-widest text-white hover:bg-gray-800 transition-colors">
-                      Discover details
+                      {t("discoverDetails")}
                     </span>
                   </div>
                 </div>
@@ -129,7 +137,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                     src={getMediaURL(Array.isArray(product.images) ? product.images[0]?.url : (product.images as any)?.url) || ''}
                     alt={product.title}
                     fill
-                    sizes="(max-width: 640px) 100vw, 25vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1400px) 25vw, 350px"
                     className="object-contain p-5 transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
@@ -143,7 +151,7 @@ export function FeaturedProducts({ title, products }: FeaturedProductsProps) {
                   </p>
                   <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="text-[10px] font-bold uppercase tracking-widest text-black border-b border-black pb-0.5">
-                      View Product
+                      {t("viewProduct")}
                     </span>
                   </div>
                 </div>

@@ -11,12 +11,14 @@ import { AddToCartButton } from "./AddToCartButton";
 import { ArrowLeft } from "lucide-react";
 import { ProductCard } from "./ProductCard";
 import { ProductNav } from "./ProductNav";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface ProductPageClientProps {
   product: ProductData;
 }
 
 export function ProductPageClient({ product }: ProductPageClientProps) {
+  const { t } = useLanguage();
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.name ?? "");
   const [openSection, setOpenSection] = useState<"details" | "payments" | "shipping" | null>(null);
 
@@ -70,7 +72,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             className="group flex items-center gap-2 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-gray-400 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-            Back to Home
+            {t("backToHome")}
           </Link>
         </div>
         
@@ -101,7 +103,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             {/* Color selector */}
             <div className="flex flex-col gap-2">
               <p className="text-[11px] sm:text-xs uppercase tracking-[0.24em] text-gray-400 font-medium">
-                Color — <span className="text-gray-600">{selectedColor}</span>
+                {t("color")} — <span className="text-gray-600">{selectedColor}</span>
               </p>
               <ColorSelector
                 colors={product.colors}
@@ -122,7 +124,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
             <div className="mt-2">
               <div id="details">
                 <Accordion
-                  title="Details"
+                  title={t("details")}
                   items={product.details}
                   open={openSection === "details"}
                   onOpenChange={(isOpen) => setOpenSection(isOpen ? "details" : null)}
@@ -131,7 +133,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
 
               <div id="payments">
                 <Accordion
-                  title="Payments"
+                  title={t("payments")}
                   items={product.paymentOptions}
                   open={openSection === "payments"}
                   onOpenChange={(isOpen) => setOpenSection(isOpen ? "payments" : null)}
@@ -140,7 +142,7 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
 
               <div id="shipping">
                 <Accordion
-                  title="Shipping"
+                  title={t("shipping")}
                   items={product.shipping}
                   open={openSection === "shipping"}
                   onOpenChange={(isOpen) => setOpenSection(isOpen ? "shipping" : null)}
@@ -167,13 +169,13 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 border-t border-gray-100">
         <div className="flex items-center justify-between gap-4 mb-8 sm:mb-10">
           <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight">
-            Looking for more?
+            {t("lookingForMore")}
           </h2>
           <Link
             href="/"
             className="shrink-0 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.24em] text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1"
           >
-            More →
+            {t("more")}
           </Link>
         </div>
 

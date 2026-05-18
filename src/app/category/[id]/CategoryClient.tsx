@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface Product {
   id: string;
@@ -17,12 +18,13 @@ interface CategoryClientProps {
 }
 
 export function CategoryClient({ name, products }: CategoryClientProps) {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-white pt-24 sm:pt-28 lg:pt-32 pb-14 sm:pb-20">
       <div className="container mx-auto px-4 sm:px-6">
         {/* Breadcrumbs */}
         <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-gray-400 mb-6 sm:mb-8">
-          <Link href="/" className="hover:text-black transition-colors">Home</Link>
+          <Link href="/" className="hover:text-black transition-colors">{t("home")}</Link>
           <span>/</span>
           <span className="text-gray-900 font-medium">{name}</span>
         </div>
@@ -50,7 +52,7 @@ export function CategoryClient({ name, products }: CategoryClientProps) {
                     href={`/product/${product.id}`}
                     className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 px-6 sm:px-10 py-2.5 bg-gray-900 text-white rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-[0.22em] hover:bg-black transition-all duration-300 transform translate-y-0 sm:translate-y-2 sm:group-hover:translate-y-0 inline-block"
                   >
-                    Learn more
+                    {t("learnMore")}
                   </Link>
                 </div>
               </div>

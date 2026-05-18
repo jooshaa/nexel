@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { getProductBySlug, getAllProductSlugs, getMediaURL } from "@/lib/cms/api";
+import { getProductBySlug, getAllProductSlugs } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
 import { mapCMSProductToUI } from "@/lib/cms/adapters";
 import { ProductPageClient } from "@/components/product/ProductPageClient";
 import type { Metadata } from "next";

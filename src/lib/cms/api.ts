@@ -10,19 +10,11 @@ import type {
   NavbarSection,
   StrapiResponse,
 } from './types';
+import { cookies } from 'next/headers';
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-export const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:1337';
-
-export function getMediaURL(url: string | undefined | null): string {
-  if (!url) return "";
-  if (url.startsWith("http")) return url;
-  
-  // Ensure we don't have double slashes if url starts with /
-  const cleanUrl = url.startsWith("/") ? url : `/${url}`;
-  return `${CMS_URL}${cleanUrl}`;
-}
+import { CMS_URL } from './utils';
 
 const CMS_TOKEN = process.env.CMS_API_TOKEN; 
 
@@ -60,6 +52,23 @@ async function cmsGet<T>(
   }
 
   try {
+    // Attempt to get locale from cookies for server-side fetching
+    let currentLocale = 'ru';
+    try {
+      const cookieStore = await cookies();
+      const localeCookie = cookieStore.get('NEXT_LOCALE');
+      if (localeCookie?.value) {
+        currentLocale = localeCookie.value;
+      }
+    } catch (e) {
+      // In case we are not in a server component context (or statically generating), silently default to 'ru'
+    }
+
+    // Append locale param if not explicitly overridden in params
+    if (!url.searchParams.has('locale')) {
+      url.searchParams.set('locale', currentLocale);
+    }
+
     const res = await fetch(url.toString(), {
       headers: {
         'Content-Type': 'application/json',

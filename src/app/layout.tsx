@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono, Playfair_Display, Bruno_Ace } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { LanguageProvider } from "@/lib/LanguageContext";
 
 const playfairHeading = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-heading-font",
+});
+
+const brunoAce = Bruno_Ace({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-bruno-font",
 });
 
 const geistSans = Geist({
-  variable: "--font-sans",
+  variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-geist-mono-font",
   subsets: ["latin"],
 });
 
@@ -73,15 +80,18 @@ export default function RootLayout({
         "antialiased",
         geistSans.variable,
         geistMono.variable,
-        playfairHeading.variable
+        playfairHeading.variable,
+        brunoAce.variable
       )}
     >
       <body className="min-h-full flex flex-col">
-        <Header />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
+        <LanguageProvider>
+          <Header />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

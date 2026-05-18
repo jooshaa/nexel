@@ -10,13 +10,17 @@ import { MegaMenu } from "./MegaMenu";
 import { MENU_DATA } from "@/lib/menuData";
 import { AnimatePresence, motion } from "framer-motion";
 import { NavbarSection, Product } from "@/lib/cms/types";
-import { getMediaURL } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
+import { useLanguage } from "@/lib/LanguageContext";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { searchProductsAction } from "@/app/actions/search";
 
 interface HeaderClientProps {
   navbarSections: NavbarSection[];
 }
 
 export function HeaderClient({ navbarSections }: HeaderClientProps) {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -83,8 +87,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
       }
       setIsSearching(true);
       try {
-        const { searchProducts, getMediaURL } = await import("@/lib/cms/api");
-        const products = await searchProducts(searchQuery);
+        const products = await searchProductsAction(searchQuery);
         setSearchResults(products.map(p => {
           let imageUrl = '';
           if (Array.isArray(p.images) && p.images[0]?.url) {
@@ -135,14 +138,9 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
               setIsSearchOpen(false);
             }}
           >
-            <Image
-              src="/logo.svg"
-              alt="Nexel"
-              width={100}
-              height={30}
-              priority
-              className="mix-blend-multiply w-auto h-7 md:h-8"
-            />
+            <span className="font-bruno text-[22px] md:text-2xl font-bold tracking-[0.05em] text-[#043927]">
+              NEXEL
+            </span>
           </Link>
 
           {/* Desktop Navigation - Centered (Flex-grow container) */}
@@ -200,7 +198,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search products..."
+                      placeholder={t("searchPlaceholder")}
                       className="w-full bg-gray-100 md:bg-gray-50 border border-gray-200 rounded-full py-2 pl-10 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-[#043927] transition-all"
                     />
                     
@@ -220,7 +218,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                     onClick={() => setIsSearchOpen(false)}
                     className="text-sm font-medium text-gray-600 hover:text-black md:hidden shrink-0 pr-2"
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                 </div>
 
@@ -235,7 +233,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                     >
                         <div className="p-2">
                           {isSearching ? (
-                            <div className="p-4 text-center text-sm text-gray-500">Searching...</div>
+                            <div className="p-4 text-center text-sm text-gray-500">{t("searching")}</div>
                           ) : (
                             <div className="max-h-[400px] overflow-y-auto">
                               {searchResults.map((product) => (
@@ -251,6 +249,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                                         src={product.imageUrl}
                                         alt={product.title}
                                         fill
+                                        sizes="48px"
                                         className="object-contain p-1"
                                       />
                                     )}
@@ -260,7 +259,7 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
                                       {product.title}
                                     </h4>
                                     <p className="text-xs text-gray-500 truncate">
-                                      {product.category?.name || "Product"}
+                                      {product.category?.name || t("product")}
                                     </p>
                                   </div>
                                   <div className="ml-auto text-sm font-bold text-gray-900">
@@ -282,13 +281,21 @@ export function HeaderClient({ navbarSections }: HeaderClientProps) {
             "flex items-center shrink-0 space-x-2 transition-opacity duration-300",
             isSearchOpen ? "opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto" : "opacity-100"
           )}>
+            {/* Language Switcher — hidden on mobile when search open */}
+            <LanguageSwitcher
+              className={cn(
+                "transition-all duration-300",
+                isSearchOpen ? "hidden" : "flex"
+              )}
+            />
+
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className={cn(
                 "p-2 rounded-full transition-all duration-300",
                 isSearchOpen ? "bg-gray-100 text-black hidden md:flex" : "text-gray-600 hover:text-black hover:bg-gray-50 flex"
               )}
-              aria-label="Search"
+              aria-label={t("search")}
             >
               <Search className="w-5 h-5" />
             </button>

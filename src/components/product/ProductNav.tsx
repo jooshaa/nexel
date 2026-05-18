@@ -1,23 +1,27 @@
+"use client";
+
 import Link from "next/link";
+import { useLanguage } from "@/lib/LanguageContext";
 
 type ProductNavMode = "default" | "product";
 type ProductNavSection = "details" | "payments" | "shipping";
 
 const DEFAULT_NAV_LINKS = ["Shop", "About", "Blog", "Account", "Bag"];
-const PRODUCT_NAV_LINKS: Array<{ label: string; value: ProductNavSection }> = [
-  { label: "Details", value: "details" },
-  { label: "Payments", value: "payments" },
-  { label: "Shipping", value: "shipping" },
-];
-
 export function ProductNav({ mode = "default" }: { mode?: ProductNavMode }) {
+  const { t } = useLanguage();
+
+  const PRODUCT_NAV_LINKS: Array<{ label: string; value: ProductNavSection }> = [
+    { label: t("details"), value: "details" },
+    { label: t("payments"), value: "payments" },
+    { label: t("shipping"), value: "shipping" },
+  ];
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
-          className="text-base font-semibold tracking-tight text-gray-900 hover:opacity-70 transition-opacity"
+          className="text-base font-bruno font-semibold tracking-tight text-gray-900 hover:opacity-70 transition-opacity"
         >
           Nexel
         </Link>

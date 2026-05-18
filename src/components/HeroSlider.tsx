@@ -65,18 +65,22 @@ const imageVariants: Variants = {
 export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
   const goToSlide = useCallback((index: number) => {
     setCurrentIndex(index);
+    setImageLoaded(false);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % slides.length);
+    setImageLoaded(false);
   }, [slides.length]);
 
   const prevSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    setImageLoaded(false);
   }, [slides.length]);
 
   useEffect(() => {
@@ -94,7 +98,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
   return (
     <section className="w-full mt-[55px]">
       <div 
-        className="relative w-full h-[100svh] md:h-[72vh] overflow-hidden group"
+        className="relative w-full h-[80svh] md:h-[72vh] overflow-hidden group"
         style={{ backgroundColor: currentSlide.bgColor ?? '#111111' }}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -120,7 +124,11 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
           >
             {/* Layer 1 — Background Image */}
             <motion.div
-              className="absolute inset-0 z-0 w-full h-full"
+              className="absolute inset-0 z-0 w-full h-full overflow-hidden"
+              animate={{ 
+                filter: imageLoaded ? "blur(0px) brightness(1)" : "blur(15px) brightness(0.9)",
+              }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
             >
               {/* Mobile image */}
               {(currentSlide.mobileImage || currentSlide.image) && (
@@ -129,9 +137,10 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   alt="background"
                   fill
                   priority={true}
-                  quality={90}
-                  sizes="(max-width: 768px) 200vw, 100vw"
-                  className="object-cover object-right-top md:hidden"
+                  quality={95}
+                  sizes="(max-width: 768px) 100vw, 100vw"
+                  className="object-cover object-right-top md:hidden scale-110"
+                  onLoad={() => setImageLoaded(true)}
                 />
               )}
               {/* Desktop image */}
@@ -141,9 +150,10 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
                   alt="background"
                   fill
                   priority={true}
-                  quality={90}
+                  quality={95}
                   sizes="100vw"
                   className="hidden md:block object-cover object-right-bottom"
+                  onLoad={() => setImageLoaded(true)}
                 />
               )}
             </motion.div>
@@ -226,7 +236,7 @@ export function HeroSlider({ slides, autoplayInterval = 5000 }: HeroSliderProps)
         </button>
 
         {/* LONG HORIZONTAL BULLETS (Xiaomi Style) */}
-        <div className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
+        <div className="absolute bottom-0 md:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30">
           {slides.map((slide, index) => (
             <button
               key={slide.id}

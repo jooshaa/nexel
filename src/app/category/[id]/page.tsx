@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { getCategoryBySlug, getMediaURL } from "@/lib/cms/api";
+import { getCategoryBySlug } from "@/lib/cms/api";
+import { getMediaURL } from "@/lib/cms/utils";
 import { CategoryClient } from "./CategoryClient";
 import { Metadata } from "next";
 
