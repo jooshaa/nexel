@@ -90,9 +90,23 @@ export function ProductPageClient({ product }: ProductPageClientProps) {
               <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold text-gray-900 leading-[0.95] tracking-tight max-w-[12ch]">
                 {product.name}
               </h1>
-              <p className="mt-2 text-[11px] sm:text-sm uppercase tracking-[0.28em] text-gray-400 font-medium">
-                {product.subtitle}
-              </p>
+              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <p className="text-[11px] sm:text-sm uppercase tracking-[0.28em] text-gray-400 font-medium">
+                  {product.subtitle}
+                </p>
+                {product.createdAt && (
+                  <>
+                    <span className="text-gray-300 hidden sm:inline">•</span>
+                    <span className="text-[10px] sm:text-xs text-gray-400 font-mono">
+                      {new Date(product.createdAt).toLocaleDateString(undefined, {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Price */}

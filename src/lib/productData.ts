@@ -15,6 +15,7 @@ export type ProductData = {
   paymentOptions: string[];
   shipping: string[];
   relatedProducts: RelatedProduct[];
+  createdAt?: string;
 };
 
 export type RelatedProduct = {

@@ -45,6 +45,7 @@ export function mapCMSProductToUI(product: CMSProduct): UIProductData {
     // Stable defaults for production
     paymentOptions: ['Pay in full', '0% APR Installments'],
     shipping: ['Free standard shipping', '30-day returns'],
+    createdAt: product.createdAt || undefined,
     // Safely map related products from category
     relatedProducts: product.category?.products
       ? product.category.products
