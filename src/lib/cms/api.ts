@@ -111,6 +111,7 @@ export async function getHeroSlides(locale?: string): Promise<HeroSlide[]> {
       'populate': {
         image: true,
         bgColor: true,
+        mobileImage: true,
       },
     },
     300,

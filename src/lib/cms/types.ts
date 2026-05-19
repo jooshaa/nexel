@@ -116,6 +116,7 @@ export interface HeroSlide {
   buttonLink: string;
   bgColor: { url: string } | null;  // это фон
   image: { url: string } | null;    // это PNG товара
+  mobileImage: { url: string } | null;
 }
 
 export interface FeaturedSection {

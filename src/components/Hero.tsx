@@ -18,6 +18,7 @@ export function Hero({ slides }: HeroProps) {
       subtitle: slide.subtitle || "",
       description: slide.description || "", 
       image: slide.bgColor?.url ? getMediaURL(slide.bgColor.url) : (slide.image?.url ? getMediaURL(slide.image.url) : ""),
+      mobileImage: slide.mobileImage?.url ? getMediaURL(slide.mobileImage.url) : undefined,
       bgColor: "#111111", // Default background color if needed
       link: slide.buttonLink || "/",
       buttonText: slide.buttonText || "Discover more",
